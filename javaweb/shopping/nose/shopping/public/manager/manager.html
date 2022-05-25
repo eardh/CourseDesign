@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>H简约Store</title>
+    <link rel="icon" type="image/x-icon" href="http://192.168.1.21:9090/file/images/favicon.ico">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/header1.css">
+    <link rel="stylesheet" href="../css/order.css">
+    <link rel="stylesheet" href="../css/layout1.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+</head>
+<style type="text/css" >
+    #cart-table {
+        width: 100%;
+        padding-left: 20px;
+    }
+    #cart-footer{
+        background: #eee;
+    }
+</style>
+<body>
+<!--nav-->
+<div class="nav">
+    <div class="w">
+        <div class="user-info" hidden>
+            <span class="user login">
+                <span class="link-text">
+                    欢迎，
+                    <span class="username">···</span>
+                    &nbsp;管理员
+                </span>
+                <span class="link js-logout" onclick="logout()">退出</span>
+            </span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="link" href="../about.html">关于HStore</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--nav-->
+<div class="crumb">
+    <div class="w">
+        <div class="crumb-con">
+            <span>管理员管理后台 <sub style="font-size: 20px">商家入驻申请管理</sub></span>
+        </div>
+    </div>
+</div>
+
+<div class="cart-wrap w">
+
+    <div class="titleCont" style="height: 390px;">
+        <div class="cart-list">
+            <table width="100%">
+                <tr style="width: 100%;text-align: center;height: 34px;font-size: 16px">
+                    <td style="width: 20%;">申请ID</td>
+                    <td style="width: 20%;">用户名</td>
+                    <td style="width: 20%;">申请时间</td>
+                    <td style="width: 20%;">电话</td>
+                    <td style="width: 20%;">操作</td>
+                </tr>
+                <tbody id="tlist" style="height:100%;background-color: #dfe7ea;border-radius: 20px" >
+<!--                                 <tr style="width: 100%;text-align: center;height: 30px;font-size: 16px">-->
+<!--                                     <td style="width: 20%;">订单编号</td>-->
+<!--                                     <td style="width: 20%;">商品名称</td>-->
+<!--                                     <td style="width: 20%;">数量</td>-->
+<!--                                     <td style="width: 20%;">总价</td>-->
+<!--                                     <td style="width: 20%;">-->
+<!--                                         <button style="width: 50px;background-color: #59f900;">同意</button>-->
+<!--                                         <button style="width: 50px;background-color: rgb(92 112 128 / 50%);">拒绝</button>-->
+<!--                                     </td>-->
+<!--                                 </tr>-->
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div id="pageF" style="border: 1px solid #c1a8a8;margin-right: 10px;;width: 91%;height: 50px;">
+        <div onclick="prePage()" style="background-color: #00bddc0f;text-align: -webkit-center;width: 50%;float: left;align-items: center">
+            <img height="50px" src="../image/pre.png">
+        </div>
+        <div onclick="nextPage()" style="text-align: -webkit-center;float: left;width: 50%">
+            <img height="50px" src="../image/next.png">
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!--footer-->
+<div class="footer">
+    <div class="w">
+        <p class="copyright">
+            Copyright © 2021 HStore All Right Reserved
+        </p>
+    </div>
+</div>
+<!--footer-->
+</body>
+
+<script type="text/javascript">
+
+    // 退出登录
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/logout");
+        xhr.withCredentials = true;
+        xhr.send();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        sessionStorage.removeItem("userID");
+                        window.location.href = "../login-register/login.html";
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    let userID = sessionStorage.getItem("userID");
+    let loginStatus = false;
+    let currentPage = 1;  // 当前页面
+    let pageSize = 7;     //  大小
+    let box = document.getElementById("tlist");
+
+    checkoutLoginStatus();
+
+    // 检查是否登录
+    function checkoutLoginStatus() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/check_login");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        if (data.data.role != "Manager") {
+                            alert("权限不符合");
+                            window.location.href = "../login-register/login.html";
+                        }else {
+                            document.getElementsByClassName("user-info")[0].hidden = false;
+                            document.getElementsByClassName("username")[0].innerText = data.data.userName;
+                            loginStatus = true;
+                            pageApplicationInfo();
+                        }
+                    } else {
+                        window.location.href = "../login-register/login.html"
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    // 初始化申请页面
+    function pageApplicationInfo() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/admin/page/application");
+        let formData = new FormData();
+        formData.append("currentPage", currentPage);
+        formData.append("pageSize",pageSize);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                       data.data.forEach(item => {
+                           if (data.data == null) {
+                               currentPage--;
+                               return;
+                           }
+                           let html = "";
+                           html = `
+                           <td style="width: 20%;">${item.id}</td>
+                                     <td style="width: 20%;">${item.userName}</td>
+                                     <td style="width: 20%;">${item.registerTime}</td>
+                                     <td style="width: 20%;">${item.phone}</td>
+                                     <td style="width: 20%;">
+                                         <button style="width: 50px;background-color: #59f900;" onclick="agreeAplion(${item.id})">同意</button>
+                                         <button style="width: 50px;background-color: rgb(92 112 128 / 50%);" onclick="rejectAplion(${item.id})">拒绝</button>
+                                     </td>`
+                           let el = document.createElement("tr");
+                           el.id = "el"+item.id;
+
+                           el.style.width = "100%";
+                           el.style.textAlign = "center";
+                           el.style.height = "30px";
+                           el.style.fontSize = "16px";
+                           el.innerHTML = html;
+                           box.append(el);
+                       })
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    function nextPage() {
+        box.innerText = null;
+        currentPage++;
+        pageApplicationInfo();
+    }
+
+    function prePage() {
+        if (currentPage == 1) {
+            return;
+        }
+        box.innerText = null;
+        currentPage--;
+        pageApplicationInfo();
+    }
+
+    // 同意
+    function agreeAplion(id) {
+        let co = confirm("确认同意？");
+        if (!co) {
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/admin/application/agree");
+        let formData = new FormData();
+        formData.append("ID", id);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        box.innerText = null;
+                        pageApplicationInfo();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+
+    // 拒绝
+    function rejectAplion(id) {
+        let co = confirm("确认同意？");
+        if (!co) {
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/admin/application/reject");
+        let formData = new FormData();
+        formData.append("ID", id);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        box.innerText = null;
+                        pageApplicationInfo();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+</script>
+</html>

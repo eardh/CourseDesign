@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dahuang.mapper.ShopCartMapper">
+
+    <select id="queryAll" resultType="ShopCart">
+        select *
+        from shopcart
+    </select>
+
+
+    <select id="queryByUserID" parameterType="String" resultType="ShopCart">
+        select *
+        from shopcart
+        where customerID=#{customerID}
+    </select>
+
+    <select id="queryByTwoID" parameterType="map" resultType="ShopCart">
+        select *
+        from shopcart
+        where customerID=#{customerID} and productID=#{productID}
+    </select>
+
+    <insert id="insertModel" parameterType="ShopCart">
+        insert
+        into shopcart
+        values (null,#{customerID},#{merchantID},#{productID},#{productCount});
+    </insert>
+
+    <update id="updateModel" parameterType="ShopCart">
+        update shopcart
+        set customerID=#{customerID},merchantID=#{merchantID},productID=#{productID},productCount=#{productCount}
+        where ID=#{ID}
+    </update>
+
+    <delete id="deleteByID" parameterType="String">
+        delete
+        from shopcart
+        where ID=#{ID}
+    </delete>
+
+</mapper>

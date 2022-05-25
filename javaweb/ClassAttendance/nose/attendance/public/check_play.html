@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0,
+    maximum-scale=1.0,minimum-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="https://fastly.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <!--引入bootstrap样式文件-->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/remind.css">
+    <title>发起签到</title>
+    <style>
+        body {
+            background-image: url("images/bgc1.png");
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .form_s {
+            width: 60%;
+            margin: 0 0 10% 20%;
+        }
+
+        .form_s ul li {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .form_s ul li label {
+            display: inline-block;
+            width: 20%;
+        }
+
+        .finish {
+            margin: 0 0 0 20%;
+            background-color: #eb9316;
+            width: 60%;
+        }
+
+        .peron_s {
+            position: relative;
+            left: 20%;
+            width: 60%;
+            margin: 30% 0 10% 45%;
+        }
+
+        .peron_s p {
+            font-size: 20px;
+            color: #b92c28;
+        }
+
+        .form_s ul li .ad {
+            border-radius: 80px;
+            height: 20px;
+            font-size: 14px;
+            vertical-align: center;
+            border: 1px solid gainsboro;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="peron_s">
+
+    </div>
+    <div class="form_s">
+        <ul>
+            <li>
+                <lable for="">课程名</lable>
+                <select id="select_course" style="border-radius: 80px" class="form-control">
+                </select>
+            </li>
+            <li>
+                <lable for="">持续时间</lable><input id="during" style="border-radius: 80px" oninput="if(value>30)value=30"
+                    type="number" max="10" class="form-control" placeholder="单位：分钟">
+            </li>
+            <li>
+                <lable for="">位置</lable><input onclick="getMyLocation()" class="ad" type="button" value="点击获取地理位置">
+                <input id="my_location" style="border-radius: 80px " readonly="readonly" type="text"
+                    class="form-control" placeholder="地理位置">
+            <li id="issueP"> <input onclick="issueSign()" style="border-radius: 80px " class="btn btn-default  finish" type="submit"
+                    value="确定">
+            </li>
+
+        </ul>
+
+        <div id="divP" hidden="true" style="background-color: lavender;width: 80%;height: 80%;position: absolute;top: 10% ;left:10%">
+            <h1 style="text-align: center">签到码</h1>
+            <hr>
+            <h1 id="sign_code" style="text-align: center"></h1>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="http://res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let appid = "wx43f39b59ddc889b7";
+        let openId = sessionStorage.getItem("openId");
+        let url = location.href.split('#')[0];
+        let longitude;
+        let latitude;
+
+        function loading() {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/user/${appid}/teacher/courses`,
+                params: {
+                    openId: openId,
+                }
+            }).then(d => {
+                let data = d.data.data;
+                let select_course = document.getElementById("select_course");
+
+                data.forEach(element => {
+                    select_course.options.add(new Option(element.courseTitle, element.courseId));
+                });
+            });
+        }
+
+        loading();
+
+        axios.get(`http://5ncini.natappfree.cc/wx/jsapi/${appid}/getJsapiInfo`,
+            {
+                params: {
+                    url: url,
+                }
+            }).then(data => {
+                wx.config({
+                    debug: false,
+                    appId: appid,
+                    timestamp: data.data.timestamp,
+                    nonceStr: data.data.nonceStr,
+                    signature: data.data.signature,
+                    jsApiList: [
+                        'getLocation'
+                    ]
+                });
+            })
+
+        function getMyLocation() {
+            wx.getLocation({
+                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                success: function (res) {
+                    latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                    longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                    let l = document.getElementById("my_location");
+                    l.value = `(${longitude}, ${latitude})`;
+                }
+            });
+        }
+
+
+        function issueSign() {
+            let select_course = document.getElementById("select_course");
+            let idx = select_course.selectedIndex;
+            let tx = document.getElementById("my_location").value;
+            let during = document.getElementById("during").value;
+            let courseId = select_course.options[idx].value;
+
+            if(tx == "" || during == "") {
+                alert("please infomation");
+            }
+            
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/kq/${appid}/teacher/issue_sign`,
+                params: {
+                    openId: openId,
+                },
+                data : {
+                    courseId : courseId,
+                    longitude : longitude,
+                    latitude : latitude,
+                    signDuring: during
+                }
+            }).then(d => {
+                let data = d.data.data;
+                let sign_code = document.getElementById("sign_code");
+                let issueP = document.getElementById("issueP");
+                let divP = document.getElementById("divP");
+                sign_code.innerText = data;
+                issueP.hidden = true;
+                divP.hidden = false;
+            }).catch(e => {
+                alert(e);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

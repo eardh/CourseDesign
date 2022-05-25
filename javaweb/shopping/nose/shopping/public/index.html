@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>H简约Store</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/x-icon" href="http://192.168.1.21:9090/file/images/favicon.ico">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/layoutindex.css">
+    <link rel="stylesheet" href="css/page.css">
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+</head>
+<style type="text/css">
+.banner-con .banner-img{
+    width: 100%;
+    height: 370px;
+}
+</style>
+<body>
+<!--nav-->
+<div class="nav">
+    <div class="w">
+        <div class="user-info">
+            <span class="user not-login">
+                <span class="link js-login" ><a href="./login-register/login.html">登录</a></span>
+                <span class="link js-register" ><a href="./login-register/login.html">注册</a></span>
+            </span>
+            <span class="user login" hidden>
+                <span class="link-text">
+                    欢迎，
+                    <span class="username"></span>
+                </span>
+                <span class="link js-logout" onclick="logout()">退出</span>
+            </span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="link" href="./cart.html">
+                    <i class="fa fa-shopping-cart"></i>
+                    购物车
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./myorder.html">我的订单</a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./about.html">关于HStore</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--nav-->
+<!--header-->
+<div class="header">
+    <div class="w">
+        <a class="logo" href="#">HStore</a>
+        <div class="search-con">
+            <input class="search-input" id="search-input" placeholder="请输入商品名称"/>
+            <button class="btn search-btn" onclick="searchProduct()">搜索</button>
+        </div>
+    </div>
+</div>
+<!--header-->
+<!--index-->
+
+<div class="w">
+
+    <div class="floor-wrap">
+        <h1 id="t1" class="floor-title" onclick="load_all()">全部商品</h1>
+        <h1 id="t2" class="floor-title" onclick="load_electronic()">电子产品</h1>
+        <h1 id="t3" class="floor-title" onclick="load_household()">家用电器</h1>
+        <h1 id="t4" class="floor-title" onclick="load_fresh()">食品生鲜</h1>
+        <h1 id="t5" class="floor-title" onclick="load_literature()">文学书刊</h1>
+        <h1 id="t6" class="floor-title" onclick="load_clothing()">服装箱包</h1>
+        <ul id="product" class="floor-list">
+
+        </ul>
+    </div>
+
+</div>
+
+<!--index-->
+<!--footer-->
+<div class="footer">
+    <div class="w">
+        <p class="copyright">
+            Copyright © 2021 HStore All Right Reserved
+        </p>
+    </div>
+</div>
+<!--footer-->
+
+<script type="text/javascript">
+
+    // 退出登录
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/logout");
+        xhr.withCredentials = true;
+        xhr.send();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        sessionStorage.removeItem("userID");
+                        window.location.href = "./index.html";
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    let userID = sessionStorage.getItem("userID");
+    checkoutLoginStatus();
+    let loginStatus = false;
+
+    let listBox = document.getElementById("product");
+    let select = document.getElementsByClassName("floor-title");
+    let scrollPage = [];  // 用于定位位于哪个分类项
+    let currentPage = 0;  // 当前页面
+    let pageSize = 6;     //  大小
+    initTitle(0);
+
+    // 检查是否登录
+    function checkoutLoginStatus() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/check_login");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                       document.getElementsByClassName("not-login")[0].hidden = true;
+                       document.getElementsByClassName("login")[0].hidden = false;
+                       document.getElementsByClassName("username")[0].innerText = data.data.userName;
+                       loginStatus = true;
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+
+    }
+
+
+    // 初始化页面
+    function initTitle(index) {
+        console.info(index);
+        listBox.innerHTML = null;
+        for ( let i = 0; i < 7;i++) {
+            i == index ? scrollPage[i] = true: scrollPage[i] = false;
+            if ( i < 6) {
+                select[i].style.borderBottom = null;
+            }
+            console.info(scrollPage[i]);
+        }
+        currentPage = 1;
+        if (index < 6) {
+            select[index].style.borderBottom = "1px solid #d58717";
+        }
+    }
+
+    // 全部商品加载
+    load_product();
+
+    // 连接后端加载数据
+    function load_product(type,productName) {
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST","http://192.168.1.21:9090/product/page");
+
+        let formData=new FormData();
+        formData.append("currentPage",currentPage);
+        formData.append("pageSize",pageSize);
+        if (type != null) {
+            formData.append("type",type);
+        }
+        if (productName != null) {
+            formData.append("productName",productName);
+        }
+
+        xhr.send(formData);
+
+        xhr.onreadystatechange = () => {
+            if ( xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300 ) {
+                    console.info(xhr.status);
+                    const data = JSON.parse(xhr.responseText);
+                    let html = "";
+                    console.info(data.data)
+                    if (data.data != null) {
+                        data.data.forEach(item => {
+                            html =
+                                `<div>
+                    <span hidden id="productID">${item.id}</span>
+                    <a href="./detail.html?productId=${item.id}">
+                        <span class="floor-text">${item.productName}</span>
+                        <img class="floor-img" src="${item.image}" />
+                    </a>
+                    <span class="item_price">价格：</span>
+                    <span class="item_price_money">${item.price}</span>
+
+                    <span class="item_stock">库存：</span>
+                    <span class="item_stock_count">${item.stock}</span>
+                </div>`
+                            console.info(item);
+                            let product = document.createElement("li");
+                            product.className = "floor-item";
+                            product.innerHTML = html;
+                            listBox.append(product);
+                        });
+                    }
+                    currentPage++;
+                } else {
+                    console.info("error");
+                }
+            }
+        }
+    }
+
+    // 滚动加载
+    $(document).scroll(function () {
+        var scrollTop = $(this).scrollTop();     //滑过的文档高度
+        var scrollHeight = $(this).height();      //文档高度
+        var windowHeight = window.innerHeight;  //浏览器窗口高度
+        if (scrollTop + windowHeight  == scrollHeight) {
+            //加载数据等操作
+            for ( let i = 0; i < 7;i++) {
+               if (scrollPage[i] == true) {
+                   switch (i) {
+                       case 0:
+                           console.info("加载全部");
+                           load_product();break;
+                       case 1:
+                           console.info("ELECTRONIC_PRODUCT");
+                           load_product("ELECTRONIC_PRODUCT",null);break;
+                       case 2:
+                           console.info("HOUSEHOLD_APPLICATION");
+                           load_product("HOUSEHOLD_APPLICATION",null);break;
+                       case 3:
+                           console.info("FRESH_FOOD")
+                           load_product("FRESH_FOOD",null);break;
+                       case 4:
+                           console.info("LITERATURE");
+                           load_product("LITERATURE",null);break;
+                       case 5:
+                           console.info("CLOTHING_LUGGAGE");
+                           load_product("CLOTHING_LUGGAGE",null);break;
+                       case 6:
+                           console.info("搜索");
+                           let search = document.getElementById("search-input");
+                           if (search.value == null || search.value.trim() == "") {
+                               return false;
+                           }
+                           load_product(null,search.value);break;
+                   }
+               }
+            }
+        }
+    });
+
+    // 加载全部
+    function load_all() {
+        initTitle(0);
+        load_product();
+    }
+
+    // 加载电子商品
+    function load_electronic() {
+        initTitle(1);
+        load_product("ELECTRONIC_PRODUCT",null);
+    }
+
+    // 加载家用电器
+    function load_household() {
+        initTitle(2);
+        load_product("HOUSEHOLD_APPLICATION",null);
+    }
+
+    // 加载食物生鲜
+    function load_fresh() {
+        initTitle(3);
+        load_product("FRESH_FOOD",null);
+    }
+
+    // 加载文学刊物
+    function load_literature() {
+        initTitle(4);
+        load_product("LITERATURE",null);
+    }
+
+    // 加载服装箱包
+    function load_clothing() {
+        initTitle(5);
+        load_product("CLOTHING_LUGGAGE",null);
+    }
+
+    // 搜索商品
+    function searchProduct() {
+        let search = document.getElementById("search-input");
+        if (search.value == null || search.value.trim() == "") {
+            alert("请输入商品关键字");
+            return false;
+        }
+        initTitle(6);
+        load_product(null,search.value);
+    }
+
+</script>
+
+</body>
+</html>
+

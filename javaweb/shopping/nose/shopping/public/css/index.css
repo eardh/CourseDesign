@@ -1,0 +1,143 @@
+/*
+* @Author: Rosen
+* @Date:   2017-05-09 17:16:19
+* @Last Modified by:   Rosen
+* @Last Modified time: 2017-05-26 19:25:17
+*/
+
+/* keywords-list */
+.keywords-list{
+    float: left;
+    width: 240px;
+    height: 350px;
+    padding: 10px 0;
+    margin-right: 10px;
+    background: #666;
+    color: #fff;
+}
+.keywords-list .keywords-item{
+    padding-left: 10px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+}
+.keywords-list .keywords-item:hover{
+    background: #999;
+}
+.keywords-list .keywords-item .link{
+    margin-right: 6px;
+    color: #fff;
+}
+.keywords-list .keywords-item .link:hover{
+    color: #c60023;
+}
+
+/* banner-con */
+.banner-con{
+    width: 830px;
+    float: left;
+    height: 370px;
+    background: #eee;
+}
+.banner-con .loading{
+    margin-top: 150px;
+}
+.banner-con .banner-img{
+    width: 100%;
+    height: 370px;
+}
+/* banner的前一张和后一张按钮 */
+.banner-con .banner-arrow{
+    position: absolute;
+    top:160px;
+    width: 30px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 30px;
+    color: #fff;
+    background: #ccc;
+    background: rgba(0,0,0,.2);
+    cursor: pointer;
+}
+.banner-con .banner-arrow:hover{
+    background: #aaa;
+    background: rgba(0,0,0,.5);
+}
+.banner-con .banner-arrow.prev{
+    left: 0;
+}
+.banner-con .banner-arrow.next{
+    right: 0;
+}
+/* floor */
+.floor-wrap .floor-title{
+    display: inline;
+    height: 50px;
+    line-height: 50px;
+    color: #d58717;
+    font-weight: normal;
+    font-size: 20px;
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+.floor-wrap .floor-list{
+    overflow: hidden;
+}
+.floor-wrap .floor-list .floor-item{
+    position: relative;
+    width: 200px;
+    height: 300px;
+    margin: 15px 20px 15px 0;
+    float: left;
+    cursor: pointer;
+    background: #fff;
+}
+.floor-wrap .floor-list .floor-item:hover{
+    box-shadow: 1px 1px 7px #ddd;
+}
+.floor-wrap .floor-list .floor-item .floor-text{
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    font-size: 16px;
+    color: #555;
+}
+.floor-wrap .floor-list .floor-item .floor-img{
+    position: absolute;
+    right: 15px;
+    margin-top: 40px;
+    width: 80%;
+    height: 160px;
+    border: none;
+}
+
+.item_price {
+    position: absolute;
+    top: 215px;
+    left: 50px;
+    font-size: 16px;
+    color: #555;
+}
+.item_price_money {
+    position: absolute;
+    top: 215px;
+    left: 100px;
+    font-size: 16px;
+    color: #ff0000;
+}
+.item_stock {
+    position: absolute;
+    top: 240px;
+    left: 50px;
+    font-size: 16px;
+    color: #555;
+}
+.item_stock_count {
+    position: absolute;
+    top: 240px;
+    left: 100px;
+    font-size: 16px;
+    color: #2600ff;
+}

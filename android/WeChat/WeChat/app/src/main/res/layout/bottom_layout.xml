@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:id="@+id/bottom_layout"
+    android:layout_height="55dp">
+
+    <LinearLayout
+        android:id="@+id/tab_message"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/tab_message_img"
+            android:layout_width="32dp"
+            android:background="@drawable/tab_message"
+            android:layout_height="32dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="消息"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_contact_person"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/tab_contact_person_img"
+            android:layout_width="32dp"
+            android:background="@drawable/tab_contact_person"
+            android:layout_height="32dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系人"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_profile"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/tab_profile_img"
+            android:layout_width="32dp"
+            android:background="@drawable/tab_profile"
+            android:layout_height="32dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的"/>
+
+    </LinearLayout>
+
+</LinearLayout>

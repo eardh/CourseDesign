@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.mapper.AtdMapper">
+
+    <insert id="insertSign" parameterType="map" useGeneratedKeys="true" keyProperty="signId">
+        insert into sign(course_id, sign_type, sign_code, sign_location, sign_start_time, sign_during)
+        values(#{courseId}, #{signType}, #{signCode}, #{signLocation}, #{startTime}, #{signDuring});
+    </insert>
+
+    <select id="queryByStudentId" parameterType="String" resultType="SignInfo">
+        select a.sign_id as signId,
+               c.user_name as teacherName,
+               b.course_title as courseName,
+               a.sign_type as signType,
+               a.sign_code as signCode,
+               a.sign_location as signLocation,
+               a.sign_start_time as startTime,
+               a.sign_during as signDuring
+        from sign a,course b,user c,student_course d
+        where d.student_id = #{studentId} and d.course_id = a.course_id and d.course_id = b.course_id and b.instructor = c.user_id;
+    </select>
+
+    <select id="queryByTeacherId" parameterType="String" resultType="SignInfo">
+        select a.sign_id as signId,
+               c.user_name as teacherName,
+               b.course_title as courseName,
+               a.sign_type as signType,
+               a.sign_code as signCode,
+               a.sign_location as signLocation,
+               a.sign_start_time as startTime,
+               a.sign_during as signDuring
+        from sign a,course b,user c
+        where b.instructor = #{teacherId} and b.instructor = c.user_id and a.course_id = b.course_id
+    </select>
+
+    <insert id="insertRecordSign">
+        insert into sign_record(sign_id, student_id)
+        values(#{signId},#{studentId});
+    </insert>
+
+    <select id="queryStusBySignId" resultType="User">
+        select c.user_id as userId,
+               c.user_name as userName
+        from education_user c
+        where c.user_id in (
+            select b.student_id
+            from sign a,student_course b
+            where a.sign_id = #{signId} and a.course_id = b.course_id
+            )
+    </select>
+
+    <select id="queryIsSign" resultType="String">
+        select a.sign_id
+        from sign_record a
+        where a.sign_id = #{signId} and a.student_id = #{studentId};
+    </select>
+
+    <select id="queryInfoBySignId" resultType="SignInfo">
+        select a.sign_id as signId,
+               b.course_title as courseName,
+               a.sign_type as signType,
+               a.sign_code as signCode,
+               a.sign_location as signLocation,
+               a.sign_start_time as startTime,
+               a.sign_during as signDuring
+        from sign a,course b
+        where a.sign_id = #{signId} and a.course_id = b.course_id;
+    </select>
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/border_input.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/loading_shape.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/message_border.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/no_read_message_bg.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/personal.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/send_button_bg.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/tab_contact_person.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/tab_contact_person_selector.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/tab_message.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/drawable/tab_profile.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout-v28/activity_chat.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/activity_add_friend.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/activity_chat.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/activity_login.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/activity_main.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/activity_register.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/bottom_layout.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/contact_person_item.xml" value="0.6" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_contact_person.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_friend.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_friends.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_group.xml" value="0.16041666666666668" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_message.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_message_recycle_item.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_personal.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/fragment_profile.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/friend_item.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/group_item.xml" value="0.16197916666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/loading_animation.xml" value="0.16041666666666668" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/msg_goup_others_item.xml" value="0.5" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/msg_others_item.xml" value="0.16041666666666668" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/msg_private_others_item.xml" value="0.6" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/msg_self_item.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/msg_type_item.xml" value="0.16041666666666668" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/new_message_item.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/sda.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/sdfsd.xml" value="0.3" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/WeChat/app/src/main/res/layout/top_contact_person_layout.xml" value="0.4466666666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4466666666666667" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

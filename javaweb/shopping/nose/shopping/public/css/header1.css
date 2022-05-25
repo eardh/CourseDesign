@@ -1,0 +1,97 @@
+/*
+* @Author: Rosen
+* @Date:   2017-05-18 19:30:20
+* @Last Modified by:   Rosen
+* @Last Modified time: 2017-05-23 20:03:49
+*/
+/* 通用头部导航 */
+.header .logo{
+    position: absolute;
+    top: 34px;
+    display: block;
+    font-size: 36px;
+    color: rgb(19 124 189 / 30%);;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .search-con{
+    padding: 40px 0 30px 150px;
+}
+.header .search-con .search-input{
+    width: 550px;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    font-size: 15px;
+    border: 2px solid rgb(167 182 194 / 60%);
+    outline: none;
+}
+.header .search-con .search-btn{
+    position: absolute;
+    height: 44px;
+    width: 80px;
+}
+
+/* 面包屑导航 */
+.crumb{
+    margin-bottom: 15px;
+    line-height: 50px;
+    font-size: 30px;
+    text-align: center;
+}
+
+/*滚动条样式*/
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    background-color: #c3c3c3;
+}
+*::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.titleBox {
+    float: left;
+    border: 1px solid lightgreen;
+    width: fit-content;
+    padding: 10px;
+}
+
+.title {
+    cursor:pointer;
+    font-size: 16px;
+    line-height: 50px;
+    height: 50px;
+}
+
+.titleCont {
+    position: relative;
+    float: left;
+    border: 1px solid lightgreen;
+    width: 91%;
+    height: 400px;
+}
+.se2{
+    margin-left: 60px;
+    margin-top: -27px;
+    width:40px;
+    height:40px;
+    position:absolute;
+    z-index: 1;
+    opacity: 0;
+}
+.se1{
+    width:40px;
+    height:20px;
+    color:#fff;
+    background: #28abde;
+}
+.se1:hover{
+    cursor: pointer;
+}

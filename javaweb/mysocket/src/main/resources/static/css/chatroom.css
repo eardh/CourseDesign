@@ -1,0 +1,433 @@
+html {
+    background: url("../img/chatback.jpg") 100% 100%;
+}
+
+body {
+	font-family:"微软雅黑" !important;
+}
+
+.qqBox{
+    width: 798px;
+    height: 600px;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+.BoxHead{
+    width: 100%;
+    height: 52px;
+    background: url(../img/box_head.jpg) no-repeat;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+}
+.headImg{
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    border-radius: 60%;
+    margin:0 10px;
+}
+.headImg img{
+    width: 100%;
+    height: 100%;
+    border-radius:50%;
+}
+.internetName{
+    width: auto;
+    height: 52px;
+    line-height: 52px;
+    color: white;
+}
+.context{
+	-webkit-box-flex: 1;
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+}
+.conLeft{
+    width: 200px;
+    height:548px;
+    overflow: auto;
+    background: rgb(255 255 255 / 15%);
+}
+.Lefthead {
+    width: 200px;
+    height:50px;
+    overflow: auto;
+    background: #6bc756;
+}
+.conLeft::-webkit-scrollbar{
+    width: 0;
+}
+.conLeft ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.conLeft li{
+    width: 100%;
+    height: 62px;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+}
+.conLeft li .liLeft{
+	position: relative;
+    width:30%;
+    height: 100%;
+}
+.liLeft img{
+    margin: 10px;
+    width: 42px;
+    height: 42px;
+}
+.liRight span{
+    display:block;
+    font-size: 16px;
+    height: 31px;
+    line-height: 31px;
+}
+.liRight span:last-child{
+    font-size: 14px;
+    color: #767676;
+    line-height:15px;
+    overflow: hidden;
+}
+.conRight{
+    -webkit-box-flex: 1;
+    display: none;
+    -webkit-box-orient: vertical;
+}
+.Righthead{
+    width: 100%;
+    height: 42px;
+    border-bottom: 1px solid #ccc;
+}
+.headName{
+    width: auto;
+    height: 100%;
+    line-height: 42px;
+    margin-left: 20px;
+    font-family: "微软雅黑";
+    font-size: 18px;
+    float: left;
+}
+.headConfig{
+    width: 20%;
+    float: right;
+    height: 100%;
+
+}
+.headConfig ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+}
+.headConfig li{
+    margin:10px 5px;
+}
+.RightCont{
+    -webkit-box-flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: #7aedff 1px solid;
+}
+
+.RightCont::-webkit-scrollbar{
+    width: 15px;
+}
+.RightCont ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.RightCont li{
+    width: 100%;
+    margin-top: 10px;
+}
+.RightCont .Rfl{
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+}
+.RightCont .Sfl{
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+}
+.nesHead{
+    border-radius: 50%;
+    float: right;
+    margin-right: 5px;
+}
+.nesHead_file {
+    border-radius: 50%;
+    float: right;
+    margin-right: 5px;
+    clear: both;
+}
+.nesHead_file img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.nesHead img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.news{
+    max-width: 300px;
+    word-wrap: break-word;
+    background: #eeeeee;
+    padding:5px 16px;
+    /*margin: 4px;*/
+    line-height: 24px;
+    font-size: 14px;
+    border-radius:10px;
+    /* margin-left: 180px; */
+    position: relative;
+    float: right;
+    margin-top: -30px;
+    margin-bottom: 20px;
+    margin-right: 60px;
+    text-align:left;
+}
+.news .jiao{
+    position: absolute;
+    left: -8px;
+    top: 10px;
+}
+.ExP img{
+	width: 21px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.Expr{
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+}
+.answerHead{
+    border-radius: 50%;
+    margin-left:15px ;
+    float: left;
+}
+.answerHead img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.answers{
+    max-width: 300px;
+    word-wrap: break-word;
+    background: #eeeeee;
+    padding:5px 16px;
+    margin-left: 65px;
+    margin-top: -35px;
+    line-height: 24px;
+    font-size: 14px;
+    border-radius:10px;
+    margin-bottom: 20px;
+    position: relative;
+    float: left;
+}
+.answers-group{
+    max-width: 300px;
+    word-wrap: break-word;
+    background: #eeeeee;
+    padding:5px 16px;
+    line-height: 24px;
+    font-size: 14px;
+    border-radius:10px;
+    margin-left: 60px;
+    margin-top: -20px;
+    margin-bottom: 15px;
+    position: relative;
+    float: left;
+}
+.answers-group_emo{
+    word-wrap: break-word;
+    background: #eeeeee;
+    padding:5px 16px;
+    line-height: 24px;
+    font-size: 14px;
+    border-radius:10px;
+    margin-left: 60px;
+    margin-top: -20px;
+    margin-bottom: 15px;
+    /* margin-right: 170px; */
+    position: relative;
+    float: left;
+}
+.answerName {
+    /* width: 300px; */
+    letter-spacing: 1pt;
+    color: #000000;
+    word-wrap: break-word;
+    font-size: 7px;
+    margin-left: 10px;
+    position: relative;
+    float: right;
+    font-weight: bold;
+}
+.answers .jiao{
+    position: absolute;
+    right: -8px;
+    top: 10px;
+}
+.RightFoot{
+    width: 100%;
+    height: 118px;
+    border-top: 1px solid #ccc;
+    position: relative;
+}
+.emjon{
+    width: 425px;
+    height: 250px;
+    border: 1px solid #ccc;
+    position: absolute;
+    left:0;
+    top:-250px;
+    display: none;
+    background: rgb(62 144 136 / 44%);
+}
+.emjon ul{
+    list-style: none;
+    margin:0;
+}
+.emjon ul li{
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    float: left;
+
+}
+.emjon ul li:hover{
+box-shadow:5px 5px 5px #888888;
+transform: scale(1.2);
+
+}
+.emjon ul li img{
+    width: 100%;
+    height: 100%;
+
+}
+.footTop{
+    width: 100%;
+    height: auto;
+}
+.footTop ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+}
+.footTop li{
+    margin: 5px 5px;
+}
+.sendBtn{
+    width: 68px;
+    height: 25px;
+    background: #0188fb;
+    border: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: white;
+}
+.bg{
+    cursor: pointer;
+    background: #8e8ef3;
+}
+.hidden-userId{
+    display:none !important;
+}
+.hidden-groupId {
+	display:none !important;
+}
+.newsList-temp {
+    display:none !important;
+}
+.send-file-shown {
+    max-width: 300px;
+    float:right;
+    margin-right: 17px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: #eeeeee;
+    padding: 8px 20px;
+}
+.receive-file-shown {
+    width: 250px;
+    margin-left: 65px;
+    margin-top: -30px;
+    float: left;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background: #eeeeee;
+    padding: 8px 20px;
+}
+.receive-file-shown-group {
+    width: 250px;
+    margin-top: -20px;
+    margin-left: 60px;
+    margin-bottom: 20px;
+    float: left;
+    border-radius: 10px;
+    background: #eeeeee;
+    padding: 8px 20px;
+}
+.badge-avatar {
+	margin: 0px 0px 0px 42px;
+    position: absolute !important;
+}
+.logout {
+	margin-left: 640px;
+    margin-bottom: 20px;
+    opacity: 0.5 !important;
+}
+.file-upload {
+	cursor: pointer;
+}
+.conLeft ul li:hover {
+    background: #f3ee8e;
+}
+#content_div {
+    margin-left: 30px;
+    padding: 10px;
+}
+#headDelete {
+    cursor: pointer;
+    height: 70%;
+    margin-right: 12px;
+    float: right;
+    margin-top: 5px;
+}
+#headDelete img{
+    height: 100%;
+}
+/*滚动条样式*/
+#dope::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+#dope::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    background-color: #c3c3c3;
+}
+#dope::-webkit-scrollbar-track {
+    background-color: transparent;
+}

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>H简约Store</title>
+    <link rel="icon" type="image/x-icon" href="http://192.168.1.21:9090/file/images/favicon.ico">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/header1.css">
+    <link rel="stylesheet" href="../css/order.css">
+    <link rel="stylesheet" href="../css/layout1.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+</head>
+<style type="text/css" >
+    #cart-table {
+        width: 100%;
+        padding-left: 20px;
+    }
+    #cart-footer{
+        background: #eee;
+    }
+</style>
+<body>
+ <!--nav-->
+<div class="nav">
+    <div class="w">
+        <div class="user-info" hidden>
+            <span class="user login">
+                <span class="link-text">
+                    欢迎，
+                    <span class="username">···</span>
+                    &nbsp;商家
+                </span>
+                <span class="link js-logout" onclick="logout()">退出</span>
+            </span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="link" href="../about.html">关于HStore</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--nav-->
+<div class="crumb">
+            <div class="w">
+                <div class="crumb-con">
+                    <span>商家管理后台</span>
+                </div>
+            </div>
+</div>
+
+ <div class="cart-wrap w">
+     <div class="titleBox">
+         <li class="title" onclick="showOrder(0)">商品管理</li>
+         <li class="title" onclick="showOrder(1)">订单管理</li>
+         <li class="title" onclick="showOrder(2)">新增商品</li>
+     </div>
+
+     <div class="titleCont">
+         <div class="cart-list" style="height: fit-content;">
+             <table id="products" style="width: 100%;height: 100%">
+                 <tr style="width: 100%;text-align: center;height: 45px;font-size: 16px">
+                     <td style="width: 10%;">商品名</td>
+                     <td style="width: 20%;">商品图片</td>
+                     <td style="width: 20%;">商品描述</td>
+                     <td style="width: 10%;">库存</td>
+                     <td style="width: 20%;">价格</td>
+                     <td style="width: 10%;">类型</td>
+                     <td style="width: 10%;">操作</td>
+                 </tr>
+                 <tbody id="tlist0" style="background-color: #dfe7ea;border-radius: 20px" >
+
+<!--                 <tr  cellspacing="2" style="width: 100%;text-align: center;height: 30px;font-size: 16px">-->
+<!--                     <td style="width: 10%;">-->
+<!--                         <input style="width: 80px" type="text" value="商品名">-->
+<!--                     </td>-->
+<!--                     <td style="width: 20%;padding: 10px;text-align: -webkit-center">-->
+<!--                         <img height="50px" src="../image/floor/floor1-1.jpg">-->
+<!--                         <input class="se2" id="f_file" type="file" name="image"/>-->
+<!--                         <label for="f_file">-->
+<!--                             <input class="se1" type="button" value="重选" />-->
+<!--                         </label>-->
+<!--                     </td>-->
+<!--                     <td style="width: 20%;">-->
+<!--                         <textarea style="resize: none;height: 52px; width: 170px;;padding: 5px;overflow: -moz-scrollbars-vertical" content="描述"></textarea>-->
+<!--                     </td>-->
+<!--                     <td style="width: 10%;">-->
+<!--                         <input style="width: 80px" type="text" value="库存">-->
+<!--                     </td>-->
+<!--                     <td style="width: 20%;">-->
+<!--                         <input style="width: 80px" type="text" value="价格">-->
+<!--                     </td>-->
+<!--                     <td style="width: 10%;">-->
+<!--                         <select  name="type" id="t1">-->
+<!--                             <option value="null"></option>-->
+<!--                             <option value="ELECTRONIC_PRODUCT">电子产品</option>-->
+<!--                             <option value="HOUSEHOLD_APPLICATION">家用电器</option>-->
+<!--                             <option value="FRESH_FOOD">食品生鲜</option>-->
+<!--                             <option value="LITERATURE">文学书刊</option>-->
+<!--                             <option value="CLOTHING_LUGGAGE">服装箱包</option>-->
+<!--                         </select>-->
+<!--                     </td>-->
+<!--                     <td style="width: 10%;">-->
+<!--                         <button onclick="test1()">修改</button>-->
+<!--                         <button >删除</button>-->
+<!--                     </td>-->
+<!--                 </tr>-->
+                 </tbody>
+             </table>
+         </div>
+
+         <div class="cart-list" hidden>
+             <table >
+                 <tr style="width: 100%;text-align: center;height: 34px;font-size: 16px">
+                     <td style="width: 20%;">订单编号</td>
+                     <td style="width: 10%;">商品名称</td>
+                     <td style="width: 10%;">数量</td>
+                     <td style="width: 20%;">总价</td>
+                     <td style="width: 20%;">状态</td>
+                     <td style="width: 20%;">操作</td>
+                 </tr>
+                 <tbody id="tlist1" style="height:100%;background-color: #dfe7ea;border-radius: 20px" >
+<!--                 <tr style="width: 100%;text-align: center;height: 30px;font-size: 16px">-->
+<!--                     <td style="width: 20%;">订单编号</td>-->
+<!--                     <td style="width: 20%;">商品名称</td>-->
+<!--                     <td style="width: 10%;">数量</td>-->
+<!--                     <td style="width: 20%;">总价</td>-->
+<!--                     <td style="width: 10%;">状态</td>-->
+<!--                     <td style="width: 10%;">-->
+<!--                         <button>发货</button>-->
+<!--                     </td>-->
+<!--                 </tr>-->
+
+                 </tbody>
+             </table>
+         </div>
+
+         <div class="cart-list" hidden>
+
+             <div style="text-align: center;font-size: 20px;">
+                 <form  id="form_data" action="javascript:0;" enctype="multipart/form-data" method="post">
+                     <div style="margin: 20px;">
+                         <span style="margin-inline-start: auto;">商品名：</span>
+                         <input required style="padding: 2px;width: 200px;height: 20px;" type="text" name="productName">
+                     </div>
+
+                     <div style="margin: 20px;">
+                         <span style="margin-inline-start: auto;margin-left: -120px">商品类型：</span>
+                         <select style="padding: 2px;height: 20px;"  name="type" id="tp">
+                             <option value="null"></option>
+                             <option value="ELECTRONIC_PRODUCT">电子产品</option>
+                             <option value="HOUSEHOLD_APPLICATION">家用电器</option>
+                             <option value="FRESH_FOOD">食品生鲜</option>
+                             <option value="LITERATURE">文学书刊</option>
+                             <option value="CLOTHING_LUGGAGE">服装箱包</option>
+                         </select>
+                     </div>
+
+                     <div style="margin: 20px;">
+                         <span style="margin-inline-start: auto;">库存：</span>
+                         <input  required style="padding: 2px;width: 200px;height: 20px;" type="text" name="stock">
+                     </div>
+
+                     <div style="margin: 20px;">
+                         <span style="margin-inline-start: auto;">价格：</span>
+                         <input required style="padding: 2px;width: 200px;height: 20px;" type="text" name="price">
+                     </div>
+
+                     <div>
+                         <span style="margin-inline-start: auto;margin: 20px;">商品描述：</span>
+                         <textarea style="margin-left: -10px;margin-bottom: -10px;resize: none;width: 200px;height: 40px;overflow: -moz-scrollbars-vertical" name="description"></textarea>
+                     </div >
+
+                     <div style="margin: 20px;">
+                         <span>商品图片：</span>
+                         <input style="margin-inline-start: auto;width: 200px;height: 20px;" type="file" name="image" accept="image/*">
+                     </div>
+
+                     <button style="width: 200px; height: 40px;background: #7687b7b8;" onclick="addProduct()">确定</button>
+                 </form>
+             </div>
+
+         </div>
+     </div>
+
+     <div id="pageF" style="border: 1px solid #c1a8a8;margin-right: 10px;;width: 91%;height: 50px;float: right">
+         <div onclick="prePage()" style="background-color: #00bddc0f;text-align: -webkit-center;width: 50%;float: left;align-items: center">
+             <img height="50px" src="../image/pre.png">
+         </div>
+         <div onclick="nextPage()" style="text-align: -webkit-center;float: left;width: 50%">
+             <img height="50px" src="../image/next.png">
+         </div>
+     </div>
+
+ </div>
+
+
+
+
+<!--footer-->
+<div class="footer">
+    <div class="w">
+        <p class="copyright">
+            Copyright © 2021 HStore All Right Reserved
+        </p>
+    </div>
+</div>
+<!--footer-->
+</body>
+
+<script type="text/javascript">
+    // 退出登录
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/logout");
+        xhr.withCredentials = true;
+        xhr.send();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        sessionStorage.removeItem("userID");
+                        window.location.href = "../login-register/login.html";
+                    }
+                } else {
+                    console.info("error");
+                }
+            }
+        }
+    }
+
+    let userID = sessionStorage.getItem("userID");
+    let loginStatus = false;
+    let procurrentPage = 1;  // 当前页面
+    let propageSize = 4;     //  大小
+    let ordercurrentPage = 1;
+    let orderpageSize = 7;
+    let orderend = null;
+    let proend = null;
+    let box1 = document.getElementById("tlist0");
+    let box2 = document.getElementById("tlist1");
+
+    checkoutLoginStatus();
+
+    // 检查是否登录
+    function checkoutLoginStatus() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/check_login");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        if (data.data.role != "Merchant") {
+                            alert("权限不符合");
+                            window.location.href = "../login-register/login.html";
+                        } else {
+                            document.getElementsByClassName("user-info")[0].hidden = false;
+                            document.getElementsByClassName("username")[0].innerText = data.data.userName;
+                            loginStatus = true;
+                            loadProInfo();
+                        }
+                    } else {
+                        window.location.href = "../login-register/login.html";
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    window.onload = function () {
+        if (loginStatus) {
+            document.getElementsByClassName("user-info")[0].hidden = false;
+        }
+    }
+
+    // 加载商品
+    function loadProInfo() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/merchant/products");
+        let formData = new FormData();
+        formData.set("merchantID", userID);
+        formData.append("currentPage",procurrentPage);
+        formData.append("pageSize",propageSize);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        data.data.forEach(item => {
+                            let html = "";
+                            html = `
+                     <td style="width: 10%;">
+                         <input id="name${item.id}" style="width: 80px" type="text" value="${item.productName}">
+                     </td>
+                     <td style="width: 20%;padding: 10px;text-align: -webkit-center">
+                         <img id="img${item.id}" style="display: inline;" height="60px" src="${item.image}">
+                         <form class="se2"  action="" enctype="multipart/form-data" id="form${item.id}">
+                                <input class="se2" id="file${item.id}" type="file" accept="image/*" name="image"/>
+                         </form>
+                         <label style="position: absolute;margin-left: 10px;margin-top: 20px;" for="form${item.id}">
+                         <input class="se1" type="button" value="更换" />
+                         </label>
+                     </td>
+                     <td style="width: 20%;">
+                         <textarea id="descri${item.id}" style="resize: none;height: 52px; width: 170px;;padding: 5px;overflow: -moz-scrollbars-vertical">${item.description}</textarea>
+                     </td>
+                     <td style="width: 10%;">
+                         <input style="width: 80px" type="text" id="stock${item.id}" value="${item.stock}">
+                     </td>
+                     <td style="width: 20%;">
+                         <input style="width: 80px" type="text" id="price${item.id}" value="${item.price}">
+                     </td>
+                     <td style="width: 10%;" >
+                         <select  name="type" id="select${item.id}">
+                             <option value="null"></option>
+                             <option value="ELECTRONIC_PRODUCT">电子产品</option>
+                             <option value="HOUSEHOLD_APPLICATION">家用电器</option>
+                             <option value="FRESH_FOOD">食品生鲜</option>
+                             <option value="LITERATURE">文学书刊</option>
+                             <option value="CLOTHING_LUGGAGE">服装箱包</option>
+                         </select>
+                     </td>
+                     <td style="width: 10%;">
+                         <button onclick="alterInfo(${item.id})">修改</button>
+                         <button onclick="deletePro(${item.id})">删除</button>
+                     </td>`;
+
+                            let el = document.createElement("tr");
+                            el.id = "el" + item.id;
+                            el.style.height = "50px";
+                            el.style.width = "100%";
+                            el.style.textAlign = "center";
+                            el.style.fontSize = "16px";
+                            el.innerHTML = html;
+                            box1.append(el);
+
+                            let index;
+                            index = typeIndex(item.type);
+
+                            let sl = document.getElementById("select" + item.id);
+                            sl.options[index].selected = true;
+
+                        })
+                        console.info(data.data);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    loadOrderInfo();
+
+    // 加载订单
+    function loadOrderInfo() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/merchant/orders");
+        let formData = new FormData();
+        formData.set("merchantID", userID);
+        formData.append("currentPage",ordercurrentPage);
+        formData.append("pageSize",orderpageSize);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        data.data.forEach(item => {
+                            let status = statusVerify(item.send,item.received,item.confirm);
+                            if (status == 1) {
+                                let html = "";
+                                html =`
+                     <td style="width: 20%;">${item.serial_number}</td>
+                     <td style="width: 20%;">${item.productName}</td>
+                     <td style="width: 10%;">${item.count}</td>
+                     <td style="width: 20%;">${item.totalMoney}</td>
+                     <td id="status${item.id}" style="width: 10%;">未发货</td>
+                     <td style="width: 10%;">
+                         <button onclick="sendPro(${item.id})">发货</button>
+                     </td>`;
+                                let el = document.createElement("tr");
+                                el.style.width = "100%";
+                                el.style.textAlign = "center";
+                                el.style.height = "50px";
+                                el.style.fontSize = "16px";
+                                el.innerHTML = html;
+                                box2.append(el);
+                            }else {
+                                let html = "";
+                                html =`
+                     <td style="width: 20%;">${item.serial_number}</td>
+                     <td style="width: 20%;">${item.productName}</td>
+                     <td style="width: 10%;">${item.count}</td>
+                     <td style="width: 20%;">${item.totalMoney}</td>
+                     <td id="status${item.id}" style="width: 10%;"></td>
+                     <td style="width: 10%;">
+                     </td>`;
+                                let el = document.createElement("tr");
+                                el.style.width = "100%";
+                                el.style.textAlign = "center";
+                                el.style.height = "50px";
+                                el.style.fontSize = "16px";
+                                el.innerHTML = html;
+                                box2.append(el);
+                                let er = document.getElementById("status"+item.id);
+                                if (status == 2) {
+                                    er.innerText = "待收货";
+                                } else if (status == 3) {
+                                    er.innerText = "待确认";
+                                } else {
+                                    er.innerText = "订单已完成";
+                                }
+                            }
+                        })
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    function nextPage() {
+        let list = document.getElementsByClassName("cart-list");
+        let index;
+        for (let i = 0; i< list.length;i++) {
+            if (list[i].hidden == false) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == 0) {
+            document.getElementById("tlist"+index).innerText = null;
+            procurrentPage++;
+            loadProInfo();
+            return;
+        }
+
+        document.getElementById("tlist"+index).innerText = null;
+        ordercurrentPage++;
+        loadOrderInfo();
+
+    }
+
+    function prePage() {
+
+        let list = document.getElementsByClassName("cart-list");
+        let index;
+        for (let i = 0; i< list.length;i++) {
+            if (list[i].hidden == false) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index ==0) {
+            if (procurrentPage == 1) {
+                return;
+            }
+            document.getElementById("tlist"+index).innerText = null;
+            procurrentPage--;
+            loadProInfo();
+            return;
+        }
+
+        if (ordercurrentPage == 1) {
+            return;
+        }
+
+        document.getElementById("tlist"+index).innerText = null;
+        ordercurrentPage--;
+        loadOrderInfo();
+
+    }
+
+
+    function typeIndex(type) {
+
+        if (type == "ELECTRONIC_PRODUCT") {
+            return 1;
+        } else if (type == "HOUSEHOLD_APPLICATION") {
+            return 2;
+        } else if (type === "FRESH_FOOD") {
+            return 3;
+        } else if (type == "LITERATURE") {
+            return 4;
+        } else {
+                return 5;
+            }
+    }
+
+
+    function showOrder(index) {
+        let list = document.getElementsByClassName("cart-list");
+        for (let i = 0; i< list.length;i++) {
+            list[i].hidden = true;
+        }
+        if (index == 2) {
+            document.getElementById("pageF").hidden = true;
+        } else {
+            document.getElementById("pageF").hidden = false;
+        }
+        list[index].hidden = false;
+    }
+
+    // 状态判断
+    function statusVerify(send,received,confirm) {
+
+        if (send == false) {
+            return 1;
+        }
+
+        if ( received == false) {
+            return 2;
+        }
+
+        if (confirm == false) {
+            return 3;
+        }
+        return 4;
+    }
+
+    // 修改商品信息
+    function alterInfo(id) {
+        let proname = document.getElementById("name"+id);
+        if (proname.value == null || proname.value.trim() == "") {
+            alert("请输入商品名");
+            return;
+        }
+        let proimage = document.getElementById("file"+id);
+
+        let desc = document.getElementById("descri"+id);
+        let stock = document.getElementById("stock"+id);
+        if (stock.value == null || stock.value.trim() == "") {
+            alert("库存不能为空");
+            return;
+        }
+        let price = document.getElementById("price"+id);
+        if (price.value == null || price.value.trim() == "") {
+            alert("价格不能为空");
+            return;
+        }
+
+        let select = document.getElementById("select"+id);
+        if ( select.selectedIndex == 0) {
+            alert("请选择商品类型");
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/merchant/product/alter");
+        let formData = new FormData(document.getElementById("form"+id));
+        formData.append("ID", id);
+        formData.append("productName",proname.value);
+        formData.append("description",desc.value);
+        formData.append("stock",stock.value);
+        formData.append("price",price.value);
+        formData.append("type",select.options[select.selectedIndex].value);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        box1.innerText = null;
+                        loadProInfo();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    // 删除商品
+    function deletePro(id) {
+        let co = confirm("确认删除吗？");
+        if (!co) {
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/merchant/product/delete");
+        let formData = new FormData();
+        formData.append("ID", id);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        box1.innerText = null;
+                        loadProInfo();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+
+    }
+
+    // 发货
+    function sendPro(id) {
+        let co = confirm("确认发货吗？");
+        if (!co) {
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/merchant/product/send");
+        let formData = new FormData();
+        formData.append("ID", id);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        box2.innerText = null;
+                        loadOrderInfo();
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    // 新商品
+    function addProduct() {
+        if (document.getElementById("tp").selectedIndex == 0) {
+            alert("请选择商品类型");
+        }
+
+        let form = document.getElementById("form_data");
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/merchant/product/add");
+        let formData = new FormData(form);
+        formData.append("merchantID",userID);
+        formData.append("storeID","1");
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        form.reset();
+                        box1.innerText = null;
+                        loadProInfo();
+                    }
+                    alert(data.message);
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+</script>
+</html>
+
+
+

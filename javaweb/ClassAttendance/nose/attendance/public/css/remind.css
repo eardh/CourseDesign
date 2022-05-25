@@ -1,0 +1,13 @@
+
+/*设置登录按钮的样式*/
+.div2{
+    position: absolute;
+    left: 20%;
+    width: 60%;
+    top: 40%;
+
+}
+.div2 .login{
+    border-radius: 50px;
+    width: 100%;
+}

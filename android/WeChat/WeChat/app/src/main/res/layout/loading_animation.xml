@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/transparent"
+    android:id="@+id/loading_dialog_view">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#00FFFFFF">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:indeterminateDrawable="@drawable/loading_shape"
+            android:background="@color/transparent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

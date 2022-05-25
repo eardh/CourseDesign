@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>H简约Store</title>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="http://192.168.1.21:9090/file/images/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/detail.css">
+</head>
+<style type="text/css">
+.crumb .crumb-item {
+    color: #888;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+</style>
+<body>
+<!--nav-->
+<div class="nav">
+    <div class="w">
+        <div class="user-info">
+            <span class="user not-login">
+                <span class="link js-login" >登录</span>
+                <span class="link js-register">注册</span>
+            </span>
+            <span class="user login" hidden>
+                <span class="link-text">
+                    欢迎，
+                    <span class="username"></span>
+                </span>
+                <span class="link js-logout" onclick="logout()">退出</span>
+            </span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="link" href="./cart.html">
+                    <i class="fa fa-shopping-cart"></i>
+                    购物车
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./myorder.html">我的订单</a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./about.html">关于MMall</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--nav-->
+<!--header-->
+<div class="header">
+    <div class="w">
+
+    </div>
+</div>
+<!--header-->
+       <div class="crumb">
+            <div class="w">
+                <div class="crumb-list">
+                    <a href="./index.html" class="crumb-item">HStore</a>
+                    <span>></span>
+                    <span class="crumb-item">商品详情</span>
+                </div>
+            </div>
+        </div>
+        <div class="page-container w">
+            <div class="intro-wrap clear">
+                <div class="p-img-wrap">
+                    <div class="main-img-con">
+                        <img class="main-img" style="display: block" src="" >
+                    </div>
+                </div>
+                <div class="p-info-wrap">
+                    <p class="p-name">...</p>
+                    <p hidden id="merchantID"></p>
+                    <div style="width: 400px;margin-left: 20px;">
+                        <p id="description">···</p>
+                    </div>
+                    <div class="info-item p-price-con">
+                        <span class="label">价格：</span>
+                        <span id="price" class="p-price">...</span>
+                    </div>
+                    <div class="info-item p-quantity-con">
+                        <span class="label">库存</span>
+                        <span id="stock" class="p-price">...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">数量 </span>
+                        <input class="p-count" value="1" readonly="readonly">
+                        <span onclick="inscrease()" class="p-count-btn plus" data-opera-type="plus">+</span>
+                        <span onclick="discrease()" class="p-count-btn minus" data-opera-type="mius">-</span>
+                    </div>
+                    <div class="info-item">
+                        <a class="btn cart-add" onclick="addToShopcart()">加入购物车</a>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-wrap">
+        </div>
+        </div>
+
+<!--footer-->
+<div class="footer">
+    <div class="w">
+        <p class="copyright">
+            Copyright © 2021 HStore All Right Reserved
+        </p>
+    </div>
+</div>
+<!--footer-->
+
+<script type="text/javascript">
+
+    // 退出登录
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/logout");
+        xhr.withCredentials = true;
+        xhr.send();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        sessionStorage.removeItem("userID");
+                        window.location.href = "./index.html";
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    let productId = document.URL.split("?")[1].split("=")[1];
+    let stock = 0;
+    let userID = sessionStorage.getItem("userID");
+    let loginStatus = false;
+
+    checkoutLoginStatus();
+    // 检查是否登录
+    function checkoutLoginStatus() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/check_login");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        document.getElementsByClassName("not-login")[0].hidden = true;
+                        document.getElementsByClassName("login")[0].hidden = false;
+                        document.getElementsByClassName("username")[0].innerText = data.data.userName;
+                        loginStatus = true;
+                    }
+                } else {
+                    alert("error");
+
+                }
+            }
+        }
+
+    }
+
+    initInformation();
+    // 初始化界面
+    function initInformation() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST","http://192.168.1.21:9090/product/details");
+        let formData=new FormData();
+        if (productId == null || productId.trim() == "") {
+            return false;
+        }
+        formData.set("productID",productId);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if ( xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300 ) {
+                    const data = JSON.parse(xhr.responseText);
+                    const product = data.data;
+                    if (product != null) {
+                        document.getElementsByClassName("p-name")[0].innerText = product.productName;
+                        document.getElementById("price").innerText = product.price;
+                        document.getElementById("stock").innerText = product.stock;
+                        document.getElementById("merchantID").innerText = product.merchantID;
+                        stock = product.stock;
+                        document.getElementById("description").innerText = product.description;
+                        document.getElementsByClassName("main-img")[0].src = product.image;
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    // 加入购物车
+    function addToShopcart() {
+        if (loginStatus == false) {
+            alert("请先登录");
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/user/add_shopcart");
+        let formData = new FormData();
+        formData.set("customerID", userID);
+        formData.set("merchantID",document.getElementById("merchantID").innerText);
+        formData.set("productID",productId);
+        formData.set("productCount",document.getElementsByClassName("p-count")[0].value);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        console.info(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    // 增加
+    function inscrease() {
+        let element = document.getElementsByClassName("p-count")[0];
+        let count = element.value;
+        if ( count < stock ) {
+            count++;
+            element.value = count;
+        }
+    }
+
+    // 减少
+    function discrease() {
+        let element = document.getElementsByClassName("p-count")[0];
+        let count = element.value;
+        if (count > 1) {
+            count--;
+            element.value = count;
+        }
+    }
+</script>
+</body>
+</html>
+
+
+

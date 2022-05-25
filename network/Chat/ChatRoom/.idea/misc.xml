@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/eardh/.gradle/caches/transforms-3/b04e496035f8c1e2f42c46472bb2ce42/transformed/jetified-appcompat-resources-1.2.0/res/drawable/abc_vector_test.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/border.xml" value="0.178125" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/border_input.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/border_layout.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/button_bg.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/editor_bg.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1765625" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/drawable/send_button_bg.xml" value="0.178125" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/activity_chat.xml" value="0.40473061760841" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/msg_item.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/msg_others_item.xml" value="0.2894736842105263" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/msg_remind_item.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/msg_self_item.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/msg_server_remind_item.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/eardh/Projects/Android_Studio/ChatRoom/app/src/main/res/layout/msg_type_item.xml" value="0.3" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

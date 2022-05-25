@@ -1,0 +1,55 @@
+server:
+  port: 9527
+
+---
+#文件上传配置
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 512000
+      max-request-size: 512000
+      file-size-threshold: 10240
+
+---
+#Mybatis配置
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/wx_attendance?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package: com.huang.model.entity
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+---
+FileService:
+  imagePath: "http://localhost:9527/file/images/"
+
+---
+logging:
+  level:
+    org.springframework.web: INFO
+    com.huang: DEBUG
+    me.chanjar.weixin: DEBUG
+
+wx:
+  mp:
+    useRedis: true
+    config-storage:
+      type: redistemplate
+      key-prefix: wx
+      redis:
+        host: 127.0.0.1
+        port: 6379
+    configs:
+      - appId: wx43f39b59ddc889b7
+        secret: 623bec08be88ef835772faead2cb4f93
+        token: eardh
+        aesKey: eardh
+      - appId: wxf134ae3d463e5493
+        secret: 3dc15fd50a45c68d9ff1c85ca42b1fd8
+        token: eardh
+        aesKey: ldfC17N9q7PAlu08GMIQVWVPs66xnQoUBXJZbAyIjJi

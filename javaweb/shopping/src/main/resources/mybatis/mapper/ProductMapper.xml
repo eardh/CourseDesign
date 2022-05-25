@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dahuang.mapper.ProductMapper">
+
+    <select id="queryById" parameterType="String" resultType="Product">
+        select *
+        from product
+        where ID=#{ID}
+    </select>
+
+    <insert id="insertModel" parameterType="Product">
+        insert
+        into product
+        values (null,#{productName},#{merchantID},#{storeID},#{stock},#{price},#{type},NOW(),#{description},#{image});
+    </insert>
+
+    <delete id="deleteByID" parameterType="String">
+        delete
+        from product
+        where ID=#{ID}
+    </delete>
+
+    <update id="updateModel" parameterType="Product">
+        update product
+        set productName=#{productName},merchantID=#{merchantID},storeID=#{storeID},stock=#{stock},price=#{price},type=#{type},addtime=#{addtime},description=#{description},image=#{image}
+        where ID=#{ID}
+    </update>
+
+    <select id="queryAll" resultType="Product">
+        select *
+        from product
+    </select>
+
+    <select id="pageQueryByType" parameterType="map" resultType="Product">
+        select *
+        from product
+        <where>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+            <if test="productName!=null">
+                and productName like "%"#{productName}"%"
+            </if>
+        </where>
+        order by ID asc
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="QueryByMerchantID" parameterType="map" resultType="Product">
+        select *
+        from product
+        where merchantID=#{merchantID}
+        order by ID asc
+        limit #{startIndex},#{pageSize}
+    </select>
+
+</mapper>

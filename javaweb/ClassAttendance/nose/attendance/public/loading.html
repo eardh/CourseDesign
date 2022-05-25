@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天天签到</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <script>
+        let appid = "wx43f39b59ddc889b7";
+        init();
+
+
+        function auth() {
+            let appid = "wx43f39b59ddc889b7";
+            let redirect_uri = "http://wkh8is.natappfree.cc/loading.html";
+            let a = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+            window.location.href = a;
+        }
+
+        function init() {
+            let url = window.location.href;
+            let start = url.indexOf("?");
+            if(start == -1) {
+                auth();
+            }
+            let end = url.indexOf("&");
+            let code = url.substring(start + 6, end);
+
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/user/${appid}/auth2/login`,
+                params: {
+                    code: code,
+                }
+            }).then(d => {
+                let data = d.data.data;
+                sessionStorage.setItem("openId",data.openId);
+                if(data.userId == null || data.identity == 0) {
+                    window.location.href="./index_student.html";
+                } else {
+                    window.location.href="./index_teacher.html";
+                }
+                
+            });
+        }
+    </script>
+</body>
+
+</html>

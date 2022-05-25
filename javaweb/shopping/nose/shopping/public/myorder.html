@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>H简约Store</title>
+    <link rel="icon" type="image/x-icon" href="http://192.168.1.21:9090/file/images/favicon.ico">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/order.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+
+</head>
+<style type="text/css" >
+    #cart-table {
+        width: 100%;
+        padding-left: 20px;
+    }
+    #cart-footer{
+        background: #eee;
+    }
+</style>
+<body>
+ <!--nav-->
+<div class="nav">
+    <div class="w">
+        <div class="user-info">
+            <span class="user not-login">
+                <span class="link js-login" >登录</span>
+                <span class="link js-register">注册</span>
+            </span>
+            <span class="user login" hidden>
+                <span class="link-text">
+                    欢迎，
+                    <span class="username"></span>
+                </span>
+                <span class="link js-logout" onclick="logout()">退出</span>
+            </span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="link" href="./cart.html">
+                    <i class="fa fa-shopping-cart"></i>
+                    购物车
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./myorder.html">我的订单</a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./about.html">关于MMall</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--nav-->
+<div class="crumb">
+            <div class="w">
+                <div class="crumb-con">
+                    <a class="link" href="./index.html">HStore</a>
+                    <span>>订单支付</span>
+                    <span class="link-text"></span>
+                </div>
+            </div>
+</div>
+ <div class="cart-wrap w">
+     <div class="cart-header">
+         <table calss="cart-table" id="cart-table">
+             <tbody>
+             <tr>
+                 <th style="width: 33%;text-align: center" class="cart-cell cell-info">订单编号</th>
+                 <th style="text-align: center;width: 20%" class="cart-cell cell-count">数量</th>
+                 <th style="text-align: center;width: 12%" class="cart-cell cell-total">总价</th>
+                 <th style="text-align: center;width: 40%" class="cart-cell cell-opera">
+                     <span id="status">状态</span>
+                 </th>
+             </tr>
+             </tbody>
+         </table>
+     </div>
+     <div class="cart-list">
+         <table class="cart-table" data-product-id="26" data-checked="1" style="overflow: auto">
+             <tbody id="tlist" style="background-color: #dfe7ea;border-radius: 20px" >
+
+             </tbody>
+         </table>
+     </div>
+
+     <div class="cart-footer clear" id="cart-footer" >
+         <div class="delete-con">
+             <a class="cart-delete-seleced link" onclick="loadMore()">
+                 <i class="fa fa-trash-o" aria-hidden="true"></i>
+                 <span>加载更多···</span>
+             </a>
+         </div>
+     </div>
+
+ </div>
+
+
+
+
+<!--footer-->
+<div class="footer">
+    <div class="w">
+        <p class="copyright">
+            Copyright © 2021 HStore All Right Reserved
+        </p>
+    </div>
+</div>
+
+<!--footer-->
+</body>
+
+<script type="text/javascript">
+
+    // 退出登录
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/logout");
+        xhr.withCredentials = true;
+        xhr.send();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        sessionStorage.removeItem("userID");
+                        window.location.href = "./index.html";
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    let userID = sessionStorage.getItem("userID");
+    let loginStatus = false;
+    let currentPage = 1;  // 当前页面
+    let pageSize = 6;     //  大小
+    let listBox = document.getElementById("tlist");
+    let items = [];
+
+    checkoutLoginStatus();
+
+    // 检查是否登录
+    function checkoutLoginStatus() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/check_login");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        document.getElementsByClassName("not-login")[0].hidden = true;
+                        document.getElementsByClassName("login")[0].hidden = false;
+                        document.getElementsByClassName("username")[0].innerText = data.data.userName;
+                        loginStatus = true;
+                        initOrderInfo();
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    function initOrderInfo() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/user/orders");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        formData.append("currentPage",currentPage);
+        formData.append("pageSize",pageSize);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code != 200) {
+                        alert(data.message);
+                        return;
+                    }
+                    if (data.code == 200) {
+                        data.data.forEach(item => {
+                            let nub = statusVerify(item.send,item.received,item.confirm);
+                            if (nub == 1) {
+                                let html ="";
+                                html = `
+                    <td style="width: 20%" class="cart-cell cell-info">
+                        <a style="font-size: initial;cursor: pointer">${item.serial_number}</a>
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-price">
+                        ${item.count}
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-total">${item.totalMoney}</td>
+                    <td style="width: 40%" class="cart-cell cell-opera">
+                        未发货
+                    </td>
+                            `;
+                                let order = document.createElement("tr");
+                                order.innerHTML = html;
+                                order.style.height = "50px";
+                                order.style.border = "1px solid #f5f8fa";
+                                listBox.append(order);
+                            }
+                            else if (nub == 2) {
+                                let html ="";
+                                html = `
+                    <td style="width: 20%" class="cart-cell cell-info">
+                        <a style="font-size: initial;cursor: pointer">${item.serial_number}</a>
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-price">
+                        ${item.count}
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-total">${item.totalMoney}</td>
+                    <td style="width: 40%" class="cart-cell cell-opera">
+                         <span id="pro${item.id}">待收货</span>
+                         &nbsp;
+                         <a class="link p-name" id="receive${item.id}" onclick="receipt('r-'+${item.id})">收货</a>
+                         <a hidden class="link p-name" id="confm${item.id}" onclick="receipt('c-'+${item.id})">确认</a>
+                    </td>
+                            `;
+                                let order = document.createElement("tr");
+                                order.innerHTML = html;
+                                order.style.height = "50px";
+                                order.style.border = "1px solid #f5f8fa";
+                                listBox.append(order);
+                            }else if (nub == 3){
+                                let html ="";
+                                html = `
+                    <td style="width: 20%" class="cart-cell cell-info">
+                        <a style="font-size: initial;cursor: pointer">${item.serial_number}</a>
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-price">
+                        ${item.count}
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-total">${item.totalMoney}</td>
+                    <td style="width: 40%" class="cart-cell cell-opera">
+                         <span id="pro${item.id}">已收货</span>
+                         &nbsp;
+                         <a class="link p-name" id="confm${item.id}" onclick="receipt('c-'+${item.id})">确认</a>
+                    </td>
+                            `;
+                                let order = document.createElement("tr");
+                                order.innerHTML = html;
+                                order.style.height = "50px";
+                                order.style.border = "1px solid #f5f8fa";
+                                listBox.append(order);
+                            } else {
+                                let html ="";
+                                html = `
+                    <td style="width: 20%" class="cart-cell cell-info">
+                        <a style="font-size: initial;cursor: pointer">${item.serial_number}</a>
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-price">
+                        ${item.count}
+                    </td>
+                    <td style="width: 20%" class="cart-cell cell-total">${item.totalMoney}</td>
+                    <td style="width: 40%" class="cart-cell cell-opera">
+                        订单已完成
+                    </td>
+                            `;
+                                let order = document.createElement("tr");
+                                order.innerHTML = html;
+                                order.style.height = "50px";
+                                order.style.border = "1px solid #f5f8fa";
+                                listBox.append(order);
+                            }
+
+                        });
+                        if (data.data.length == 0 ) {
+                            document.getElementById("cart-footer").hidden = true;
+                        } else {
+                            currentPage++;
+                        }
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    // 加载更多
+    function loadMore() {
+        initOrderInfo();
+    }
+
+    // 状态判断
+    function statusVerify(send,received,confirm) {
+
+        if (send == false) {
+            return 1;
+        }
+
+        if ( received == false) {
+            return 2;
+        }
+
+        if (confirm == false) {
+            return 3;
+        }
+
+        return 4;
+
+    }
+
+    // 收货及确认
+    function receipt(clickID) {
+
+        let str = clickID.toString().split("-");
+        let formData = new FormData();
+        if (str[0] == 'r') {
+            formData.set("type","received");
+        }  else {
+            formData.set("type","confirm");
+        }
+
+        formData.set("orderID",str[1]);
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/user/receive_firm");
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                       alert(data.message);
+                        if (str[0] == 'r') {
+                            let el = document.getElementById("receive"+str[1]);
+                            let cl = document.getElementById("confm"+str[1]);
+                            let ml = document.getElementById("pro"+str[1]);
+                            el.hidden = true;
+                            cl.hidden = false;
+                            ml.innerText = "已收货";
+                        }  else {
+                            let con = document.getElementById("confm"+str[1]);
+                            let ml = document.getElementById("pro"+str[1]);
+                            ml.innerText = "订单已完成";
+                            con.hidden = true;
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+</script>
+</html>
+
+
+

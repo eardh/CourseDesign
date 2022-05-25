@@ -1,0 +1,17 @@
+.pageImage{
+    width: 50px;
+    height: 80px;
+}
+#preview {
+    margin-left: 30px;
+    margin-top: 100px;
+}
+#nextview {
+    float: left;
+    margin-top: -80px;
+}
+.products {
+    margin-top: -180px;
+    margin-left: 70px;
+    float: left;
+}

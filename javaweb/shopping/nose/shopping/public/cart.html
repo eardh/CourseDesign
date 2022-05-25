@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>H简约Store</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="http://192.168.1.21:9090/file/images/favicon.ico">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+</head>
+<style type="text/css" >
+    #cart-table {
+        width: 100%;
+        padding-left: 20px;
+    }
+    #cart-footer{
+        background: #eee;
+    }
+</style>
+<body>
+<!--nav-->
+<div class="nav">
+    <div class="w">
+        <div class="user-info">
+            <span class="user not-login">
+                <span class="link js-login" >登录</span>
+                <span class="link js-register">注册</span>
+            </span>
+            <span class="user login" hidden>
+                <span class="link-text">
+                    欢迎，
+                    <span class="username"></span>
+                </span>
+                <span class="link js-logout" onclick="logout()">退出</span>
+            </span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="link" href="./cart.html">
+                    <i class="fa fa-shopping-cart"></i>
+                    购物车
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./myorder.html">我的订单</a>
+            </li>
+            <li class="nav-item">
+                <a class="link" href="./about.html">关于MMall</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="crumb">
+    <div class="w">
+        <div class="crumb-con">
+            <a class="link" href="./index.html">HStore</a>
+            <span>>我的购物车</span>
+            <span class="link-text"></span>
+        </div>
+    </div>
+</div>
+
+<div class="cart-wrap w">
+    <div class="cart-header">
+        <table calss="cart-table" id="cart-table">
+            <tbody>
+            <tr>
+                <th style="width: 15%" class="cart-cell cell-info"></th>
+                <th style="width: 20%" class="cart-cell cell-info">商品信息</th>
+                <th style="text-align: center;width: 15%;" class="cart-cell cell-price">单价</th>
+                <th style="text-align: center;width: 20%" class="cart-cell cell-count">数量</th>
+                <th style="text-align: center;width: 20%" class="cart-cell cell-total">合计</th>
+                <th style="text-align: center;width: 20%" class="cart-cell cell-opera">操作</th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="cart-list">
+        <table class="cart-table" data-product-id="26" data-checked="1">
+            <tbody id="tlist">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="cart-footer clear" id="cart-footer">
+        <div class="select-con">
+            <label >
+
+<!--                <input type="checkbox" class="cart-select-all" onchange="allSelect()"  checked>-->
+<!--                <span>全选/全不选</span>-->
+
+            </label>
+        </div>
+        <div class="delete-con">
+            <a class="cart-delete-seleced link">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                <span></span>
+            </a>
+        </div>
+        <div class="submit-con">
+            <span>总价：</span>
+            <span class="submit-total">...</span>
+            <span data-toggle="modal" data-target="#myModal"  class="btn submit-btn">去结算</span>
+        </div>
+        &nbsp
+    </div>
+
+</div>
+
+<!--footer-->
+<div class="footer">
+    <div class="w">
+        <p class="copyright">
+            Copyright © 2021 HStore All Right Reserved
+        </p>
+    </div>
+</div>
+<!--footer-->
+<!--模拟支付窗口-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">请选择支付方式</h4>
+            </div>
+            <div class="modal-body">
+                <div id="fanshi">
+                    <button type="button" onclick="payment()" style="margin-left: 18px" class="btn btn-info">微信</button>
+                    <button type="button" onclick="payment()" style="margin-left: 18px" class="btn btn-info">支付宝</button>
+                    <button type="button" onclick="payment()" style="margin-left: 18px" class="btn btn-info">银行卡</button>
+                </div>
+                <div id="orderInfo">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" >
+
+    let userID = sessionStorage.getItem("userID");
+    let loginStatus = false;
+
+    let listBox = document.getElementById("tlist");
+    let items = [];
+
+    checkoutLoginStatus();
+
+    // 检查是否登录
+    function checkoutLoginStatus() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/check_login");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        document.getElementsByClassName("not-login")[0].hidden = true;
+                        document.getElementsByClassName("login")[0].hidden = false;
+                        document.getElementsByClassName("username")[0].innerText = data.data.userName;
+                        loginStatus = true;
+                        initCart();
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                } else {
+                    alter("error");
+                }
+            }
+        }
+
+    }
+
+    function initCart() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/user/shopCart");
+        let formData = new FormData();
+        formData.set("userID", userID);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code != 200) {
+                       alert(data.message);
+                       return;
+                    }
+                    console.info(data);
+                    let html = "";
+                    let i = 0;
+                    data.data.forEach((item) => {
+                        items[i] = item.ID;
+                        i++;
+                        html = `<td style="width:5%" id="select${item.ID}" class="cart-cell cell-check">
+                     <span id="stock${item.ID}" hidden>${item.stock}</span>
+                     <span id="productID${item.ID}" hidden>${item.productID}</span>
+                     <span id="productName${item.ID}" hidden>${item.productName}</span>
+                     <span id="merchantID${item.ID}" hidden>${item.merchantID}</span>
+                    <input id="select${item.ID}" type="checkbox" onchange="selectOrder(${item.ID})" class="cart-select" checked=true>
+                </td>
+                <td style="width: 5%" class="cart-cell cell-img">
+                    <a><img class="p-img" src="${item.image}"></a>
+                </td>
+                <td style="width: 20%" id="name${item.ID}" class="cart-cell cell-info">
+                    <a class="link p-name" href="">${item.productName}</a>
+                </td>
+                <td style="width: 20%" id="price${item.ID}" class="cart-cell cell-price">
+                    ${item.price}
+                </td>
+
+                <td style="width: 20%" class="cart-cell cell-count">
+                    <span class="count-btn" data-opera-type="minus" onclick="discrease(${item.ID})">-</span>
+                    <input class="count-input"  readonly  id="count${item.ID}" value="${item.productCount}">
+                    <span class="count-btn" data-opera-type="plus" onclick="inscrease(${item.ID})">+</span>
+                </td>
+                <td id="total${item.ID}" style="width: 20%" class="cart-cell cell-total">`+ parseFloat(item.price) * parseFloat(item.productCount) +`</td>
+                <td style="width: 10%" class="cart-cell cell-opera"><a class="link cart-delete" onclick="deleteCart(${item.ID})">删除</a></td>`
+                        let cart = document.createElement("tr");
+                        cart.id = "cart" + item.ID;
+                        cart.innerHTML = html;
+                        listBox.append(cart);
+                    });
+                    selectAll();
+                } else {
+                    alert("error");
+                }
+            }
+        }
+    }
+
+    function selectAll() {
+        items.forEach(item => {
+            let el = document.getElementById("select"+item);
+            el.checked = true;
+        });
+        allTotalMoney();
+    }
+
+    // checkbox需要在页面加载完成后此用户才可以得到
+
+    // 结算
+    function clearCart() {
+
+        for (let i = 0; i < items.length; i++ ){
+            let cart = document.getElementById("cart"+items[i]);
+            if (document.getElementById("select"+items[i]).checked) {
+                let formData = new FormData();
+                formData.set("customerID",userID);
+                formData.set("cartID",items[i]);
+                formData.set("merchantID",document.getElementById("merchantID"+items[i]).innerText);
+                formData.set("productID",document.getElementById("productID"+items[i]).innerText);
+                formData.set("productName",document.getElementById("productName"+items[i]).innerText);
+                formData.set("count",document.getElementById("count"+items[i]).value);
+                formData.set("totalMoney",document.getElementById("total"+items[i]).innerText);
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "http://192.168.1.21:9090/user/clearCart");
+                xhr.withCredentials = true;
+                xhr.send(formData);
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            const data = JSON.parse(xhr.responseText);
+                            if (data.code == 200) {
+                                console.info(data);
+                                cart.remove();
+                                let el = document.getElementById("orderInfo");
+                                let btn = document.getElementById("fanshi");
+                                btn.hidden = true;
+                                let ch = document.createElement("li");
+                                ch.innerText = "您的订单号为：" + data.data;
+                                ch.style.backgroundColor = "#ffcfcf";
+                                setTimeout(() => {
+                                    el.append(ch);
+                                },2000);
+                                items.splice(i,1);
+                            } else {
+                                alert(data.message);
+                            }
+                        } else {
+                            alert("error");
+                        }
+                    }
+                }
+            }
+        };
+
+        document.getElementsByClassName("submit-total")[0].innerText = 0;
+
+    }
+
+    //模拟支付
+    function payment() {
+        let pay = prompt("请输入支付金额：");
+        if (pay == null || pay.trim() == ""){
+            return;
+        }
+        let alltotal = document.getElementsByClassName("submit-total")[0].innerText;
+        if (parseFloat(pay) < parseFloat(alltotal)) {
+            alert("余额不足，支付失败");
+            $('#myModal').modal('hide');
+            return false;
+        }
+        alert("支付成功");
+
+       clearCart();
+
+    }
+
+    // 初始化模态框
+    $('#myModal').on('hide.bs.modal', function () {
+        document.getElementById("fanshi").hidden = false;
+        document.getElementById("orderInfo").innerText = null;
+    });
+
+    // 不在线无法打开模态框
+    $('#myModal').on('show.bs.modal', function () {
+        if (items.length == 0) {
+            alert("您还没有加入商品");
+            return false;
+        }
+        let confrm = confirm("是否清空已选购物车？");
+        if (!confrm) {
+            return false;
+        }
+    })
+
+    // 选择
+    function selectOrder(id) {
+        if (document.getElementById("select"+id).checked){
+            document.getElementById("select"+id).checked = false;
+        } else {
+            document.getElementById("select"+id).checked = true;
+        }
+        allTotalMoney();
+    }
+
+    // 全选,有bug，暂不用
+    // function allSelect() {
+    //     let tl = document.getElementsByClassName("cart-select-all")[0];
+    //     items.forEach(item => {
+    //         let el = document.getElementById("select"+item);
+    //         el.checked = true;
+    //         if (tl.checked) {
+    //             $(el).prop("checked",true);
+    //         } else {
+    //             $(el).prop("checked",false);
+    //         }
+    //     })
+    //     allTotalMoney();
+    // }
+
+    // 删除购物车的逻辑
+    function deleteCart(id) {
+        let cartId = document.getElementById("cart"+id);
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/user/deleteCart");
+        let formData = new FormData();
+        formData.set("cartID", id);
+        xhr.withCredentials = true;
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        console.info(data.message);
+                        alert("删除购物车成功");
+                        cartId.remove();
+                        allTotalMoney();
+                    }
+                } else {
+                    console.info("error");
+                }
+            }
+        }
+    }
+
+    // 增加数目
+    function inscrease(id) {
+        let element1 = document.getElementById("count"+id);
+        let element2 = document.getElementById("stock"+id);
+        let element3 = document.getElementById("price"+id);
+        let element4 = document.getElementById("total"+id);
+        let count = element1.value;
+        let stock = element2.valueOf();
+        if ( count < stock ) {
+            stock--;
+            count++;
+        }
+        element1.value = count;
+        element2.innerText = stock;
+        element4.innerText = count * element3.innerText;
+        allTotalMoney();
+    }
+
+    // 减少数目
+    function discrease(id) {
+        let element1 = document.getElementById("count"+id);
+        let element2 = document.getElementById("stock"+id);
+        let element3 = document.getElementById("price"+id);
+        let element4 = document.getElementById("total"+id);
+        let count = element1.value;
+        let stock = element2.valueOf();
+        if ( count > 1 ) {
+            count--;
+            stock++;
+        }
+        element1.value = count;
+        element2.innerText = stock;
+        element4.innerText = count * element3.innerText;
+        allTotalMoney();
+    }
+
+    function allTotalMoney() {
+        let alltotal = document.getElementsByClassName("submit-total")[0];
+        let total = 0;
+        items.forEach(item => {
+            let element4 = document.getElementById("total"+item);
+            let element3 = document.getElementById("select"+item);
+            if (element3 != null && element3.checked) {
+               total+=parseFloat(element4.innerText);
+            }
+        });
+        alltotal.innerText = total;
+    }
+
+    // 退出登录
+    function logout() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.21:9090/logout");
+        xhr.withCredentials = true;
+        xhr.send();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.code == 200) {
+                        alert(data.message);
+                        sessionStorage.removeItem("userID");
+                        window.location.href = "./index.html";
+                    }
+                } else {
+                    console.info("error");
+                }
+            }
+        }
+    }
+
+</script>
+</body>
+</html>

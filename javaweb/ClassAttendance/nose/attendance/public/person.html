@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0,
+    maximum-scale=1.0,minimum-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="https://fastly.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <!--引入bootstrap样式文件-->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/remind.css">
+    <title>身份验证</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background-image: url("images/bgc1.png");
+            background-size: 100%;
+            overflow: hidden;
+        }
+
+        .form_s {
+            width: 60%;
+            margin: 0 0 10% 20%;
+        }
+
+        .form_s ul li {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .form_s ul li label {
+            display: inline-block;
+            width: 20%;
+        }
+
+        .finish {
+            margin: 0 0 0 20%;
+            background-color: #eb9316;
+            width: 60%;
+        }
+
+        .peron_s {
+            width: 60%;
+            margin: 10% 0 10% 45%;
+        }
+
+        .peron_s p {
+            font-size: 20px;
+            color: #b92c28;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="peron_s">
+        <p>身份验证</p>
+    </div>
+    <div class="form_s">
+        <ul>
+
+            <li>
+                <lable for="name">姓名</lable> <input id="name" style="border-radius: 80px" type="text"
+                    class="form-control" placeholder="请输入你的姓名">
+            </li>
+            <li>
+                <lable for="profession">身份</lable>
+                <select id="profession" style="border-radius: 80px" class="form-control">
+                    <option>学生</option>
+                    <option>教师</option>
+                </select>
+            </li>
+            <li>
+                <lable for="number">学号/工号</lable><input id="number" style="border-radius: 80px" type="number"
+                    class="form-control" placeholder="请输入你的学号或工号 ">
+            </li>
+            <li> <input onclick="verified()" style="border-radius: 80px  " class="btn btn-default  finish" type="submit"
+                    value="确定"></li>
+        </ul>
+    </div>
+
+    <script>
+        let appid = "wx43f39b59ddc889b7";
+        let openId = sessionStorage.getItem("openId");
+
+        function verified() {
+            let name = document.getElementById("name");
+            let number = document.getElementById("number");
+            let profession = document.getElementById("profession");
+
+            let userName = name.value;
+            let userId = number.value;
+            let index = profession.selectedIndex;
+
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/user/${appid}/real_name/certification`,
+                params: {
+                    openId: openId,
+                    userId: userId,
+                    userName: userName,
+                    identity: index
+                }
+            }).then(d => {
+                let data = d.data;
+                if (data.code == 200) {
+                    if (index == 0) {
+                        window.location.href = "./index_student.html"
+                    } else {
+                        window.location.href = "./index_teacher.html"
+                    }
+                } else {
+                    alert(data.message);
+                }
+            }).catch(e => {
+                alert(e);
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>

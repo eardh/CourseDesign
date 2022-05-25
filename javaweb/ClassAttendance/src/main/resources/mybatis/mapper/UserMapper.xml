@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.mapper.UserMapper">
+
+    <insert id="insertUser" parameterType="User">
+        insert into user
+        values(#{openId},#{userId},#{userName},#{wxNickname},#{sex},#{identity},#{avatarImg});
+    </insert>
+
+    <select id="queryByUserId" parameterType="String" resultType="User">
+        select *
+        from user
+        where user_id = #{userId};
+    </select>
+
+    <select id="queryByOpenId" parameterType="String" resultType="User">
+        select a.open_id as openId,
+               a.user_id as userId,
+               a.user_name as userName,
+               a.wx_nickname as wxNickname,
+               a.sex as sex,
+               a.identity as identity,
+               a.avatar_img as avatarImg
+        from user a
+        where a.open_id = #{openId};
+    </select>
+
+    <update id="updateByOpenId">
+        update user
+        set user_id=#{userId},user_name=#{userName},identity=#{identity}
+        where open_id=#{openId};
+    </update>
+
+    <select id="queryCourseByStudentId" parameterType="String" resultType="Course">
+        select a.course_id as courseId,a.instructor as instructor,a.course_title as courseTitle
+        from course a,student_course b
+        where b.student_id=#{studentId} and a.course_id = b.course_id;
+    </select>
+
+    <select id="queryCoursesByTeacher" parameterType="String" resultType="Course">
+        select a.course_id as courseId,a.instructor as instructor,a.course_title as courseTitle
+        from course a
+        where a.instructor = #{teacherId}
+    </select>
+
+    <select id="queryEducation" resultType="String" >
+        select a.user_id
+        from education_user a
+        where a.user_id = #{userId} and a.user_name = #{userName} and a.identity = #{identity};
+    </select>
+
+</mapper>

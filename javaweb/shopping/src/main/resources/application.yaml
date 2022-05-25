@@ -1,0 +1,33 @@
+server:
+  port: 9090
+---
+#文件上传配置
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 512000
+      max-request-size: 512000
+      file-size-threshold: 10240
+
+---
+#Mybatis配置
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/shopstore?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package: com.dahuang.model
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+---
+jasypt:
+  encryptor:
+    password: dahuang
+---
+FileService:
+    imagePath: "http://localhost:9090/file/images/"
+

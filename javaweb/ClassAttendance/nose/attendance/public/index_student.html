@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0,
+    maximum-scale=1.0,minimum-scale=1.0">
+    <!--导入js    -->
+    <script src="js/index.js" type="text/javascript"></script>
+    <!-- 导入自己的css样式 -->
+    <link rel="stylesheet" href="css/index_student.css">
+    <!--导入bootstrap框架-->
+    <!--[if lt IE 9]>
+    <script src="https://fastly.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <!--引入bootstrap样式文件-->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <title>天天签到</title>
+</head>
+
+<body>
+    <!--home-->
+    <div class="home" id="home">
+        <div id="qiandao" class="qiandao">
+
+            <input id="codeSign" style="border-radius: 80px" type="text" class="form-control" placeholder="请输入签到码">
+        </div>
+        <div>
+            <input onclick="studentSign()" style="border-radius: 80px " class="btn btn-default qiandaokey" type="submit"
+                value="立即签到">
+        </div>
+
+
+
+    </div>
+    <!--history-->
+    <div class="history" id="history">
+        <div class="history_head" id="history_head">
+            <div class="my_check_div" id="my_check_div">
+                <span>我的签到</span>
+            </div>
+            <input onclick="myRefresh()" style="margin-left: 2%;" type="button"  value="刷新"/>
+        </div>
+        <div class="history_list" id="history_list">
+            <ul id="myul">
+            </ul>
+        </div>
+    </div>
+    <!--mine-->
+    <div class="mine" id="mine">
+        <div class="person_m">
+            <div class="head_pic">
+                <img id="head_picture" src="images/head.png" alt="">
+            </div>
+            <div class="head_name">
+                <p id="nick_name">爷傲奈我何</p>
+            </div>
+            <div id="vid_button" class="check_m"> <input style="border-radius: 80px " class="btn btn-default "
+                    type="submit" value="身份验证" onclick="(function(){window.location.href = './person.html'})()">
+            </div>
+        </div>
+
+
+
+        <!--    <div class="info_m_yes">-->
+
+        <!--    </div>-->
+    </div>
+    <div class="bottom">
+        <ul class="tabBar" id="tabBar">
+            <li class="tabBar-home">
+                <button id="tabBar-home" class="key_button">
+                    <img id="img1" src="images/home_click.png" alt="">
+                    <p>首页</p>
+                </button>
+            </li>
+            <li class="tabBar-history">
+                <button id="tabBar-history" class="key_button">
+                    <img id="img2" src="images/history.png" alt="">
+                    <p>历史</p>
+                </button>
+            </li>
+            <li class="tabBar-mine">
+                <button id="tabBar-mine" class="key_button">
+                    <img id="img3" src="images/mine.png" alt="">
+                    <p>我的</p>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="http://res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let appid = "wx43f39b59ddc889b7";
+        let openId = sessionStorage.getItem("openId");
+        let url = location.href.split('#')[0];
+        let longitude;
+        let latitude;
+        let user;
+        function loading() {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/user/${appid}/private/info`,
+                params: {
+                    openId: openId,
+                }
+            }).then(d => {
+                user = d.data.data;
+                let head = document.getElementById("head_picture");
+                let nick_name = document.getElementById("nick_name");
+                let button = document.getElementById("vid_button");
+                head.src = user.avatarImg;
+                nick_name.innerText = user.wxNickname;
+                if (user.userId != null && user.userId != "") {
+                    button.hidden = true;
+                }
+            });
+        }
+
+        loading();
+
+        axios.get(`http://5ncini.natappfree.cc/wx/jsapi/${appid}/getJsapiInfo`,
+            {
+                params: {
+                    url: url,
+                }
+            }).then(data => {
+                wx.config({
+                    debug: false,
+                    appId: appid,
+                    timestamp: data.data.timestamp,
+                    nonceStr: data.data.nonceStr,
+                    signature: data.data.signature,
+                    jsApiList: [
+                        'getLocation'
+                    ]
+                });
+            })
+
+        function studentSign() {
+            let codeSign = document.getElementById("codeSign").value;
+            if (codeSign == "") {
+                alert("请输入签到码");
+                return;
+            }
+            new Promise((resolve, reject) => {
+                wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        resolve(1);
+                    }
+                })
+            }).then(value => {
+                axios({
+                    method: 'post',
+                    url: `http://5ncini.natappfree.cc/kq/${appid}/student/sign_in`,
+                    params: {
+                        openId: openId,
+                        codeSign: codeSign,
+                        longitude: longitude,
+                        latitude: latitude
+                    }
+                }).then(d => {
+                    alert(d.data.message);
+                });
+            });
+        }
+
+
+        function myHisory() {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/kq/${appid}/student/sign_history`,
+                params: {
+                    openId: openId,
+                }
+            }).then(d => {
+                let data = d.data.data;
+
+                let myul = document.getElementById("myul");
+
+                myul.innerHTML = "";
+
+                data.forEach(element => {
+                    let curr = Date.now();
+                    let p = element.signDuring * 60000 + element.startTime;
+                    let html;
+                    let date = new Date(element.startTime);
+                    if (p < curr) {
+                        html = `<div class="list_item">
+                        <div class="list_name"><strong>${element.courseName}</strong></div>
+                        <div class="list_player">
+                            <p>发起人：</p>
+                            <p>${element.teacherName}</p>
+                        </div>
+                        <div class="list_button">
+                            <p id="al${element.signId}"></p>
+                        </div>
+                        <div class="list_act">
+                            <p>已结束</p>
+                        </div>
+                        <div class="list_time">
+                            <p>发起时间：</p>
+                            <p>${date.getFullYear()}/${date.getMonth()}/${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}</p>
+                        </div>
+                    </div>`;
+                    } else {
+                        html = `<div class="list_item">
+                        <div class="list_name"><strong>${element.courseName}</strong></div>
+                        <div class="list_player">
+                            <p>发起人：</p>
+                            <p>${element.teacherName}</p>
+                        </div>
+                        <div class="list_button">
+                            <p id="al${element.signId}">已签到</p>
+                        </div>
+                        <div class="list_act">
+                            <p>正在进行</p>
+                        </div>
+                        <div class="list_time">
+                            <p>发起时间：</p>
+                            <p>${date.getFullYear()}/${date.getMonth()}/${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}</p>
+                        </div>
+                    </div>`;
+                    }
+                    let myli = document.createElement("li");
+                    myli.className = "list";
+                    myli.innerHTML = html;
+                    myul.append(myli);
+
+                    alreadySign(element.signId);
+                });
+
+            });
+        }
+
+        myHisory();
+
+        function alreadySign(signId) {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/kq/${appid}/student/already_sign`,
+                params: {
+                    openId: openId,
+                    signId: signId
+                }
+            }).then(d => {
+                let ppp = document.getElementById(`al${signId}`);
+                if (d.data.data == true) {
+                    ppp.innerHTML = "已签到";
+                } else {
+                    ppp.innerHTML = "未签到";
+                }
+            });
+        }
+
+        function myRefresh() {
+            myHisory();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0,
+    maximum-scale=1.0,minimum-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="https://fastly.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <!--引入bootstrap样式文件-->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/check_main.css">
+    <title>签到详情</title>
+</head>
+
+<body>
+    <div class="check_main_head" id="">
+        <div class="icon"><a href=""><img src="images/return.png" alt=""></a></div>
+        <div class="check_div" id="">
+            <strong>签到详情</strong>
+        </div>
+    </div>
+
+    <div class="check_main_body">
+        <div class="check_info">
+            <div class="course_item">
+                <p>课程名：</p>
+                <p id="courseName">软件工程</p>
+            </div>
+            <div class="time_item">
+                <p>发起时间：</p>
+                <p id="startTime">2022-2-28-19:28</p>
+            </div>
+            <div class="">
+                <p>签到码：</p>
+                <p id="signCode">9535</p>
+            </div>
+        </div>
+        <div class="check_table">
+            <div class="check_table_p">
+                <p>签到表</p>
+            </div>
+
+        </div>
+        <div class="list_table">
+            <table id="course_signInfo" class="table table-striped">
+                <tr>
+                    <td colspan="2">姓名</td>
+                    <td colspan="2">学号</td>
+                    <td>签到与否</td>
+                    <td>补签</td>
+                </tr>
+
+
+
+            </table>
+        </div>
+
+
+
+    </div>
+
+
+    <script type="text/javascript" src="http://res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let appid = "wx43f39b59ddc889b7";
+        let openId = sessionStorage.getItem("openId");
+        let url = location.href;
+        let idx = url.indexOf("?");
+        let signId = url.substring(idx + 8, url.length + 1);
+
+        function loadSignInfo() {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/kq/${appid}/teacher/sign_info`,
+                params: {
+                    openId: openId,
+                    signId: signId
+                }
+            }).then(d => {
+                let data = d.data.data;
+                let courseName = document.getElementById("courseName");
+                let startTime = document.getElementById("startTime");
+                let signCode = document.getElementById("signCode");
+
+                courseName.innerHTML = data.courseName;
+                let date = new Date(data.startTime);
+
+                startTime.innerHTML = `${date.getFullYear()}/${date.getMonth()}/${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                signCode.innerHTML = data.signCode;
+            });
+        }
+
+        loadSignInfo();
+
+        function fixSign(userId) {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/kq/${appid}/teacher/fix_sign`,
+                params: {
+                    openId: openId,
+                    signId: signId,
+                    studentId: userId
+                }
+            }).then(d => {
+                let data = d.data;
+                if(data.code == 200) {
+                    let bid = document.getElementById(`b${userId}`);
+                    let cid = document.getElementById(`c${userId}`);
+                    bid.hidden = true;
+                    cid.innerHTML = "是";
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        function loadCourseInfo() {
+            axios({
+                method: 'post',
+                url: `http://5ncini.natappfree.cc/kq/${appid}/teacher/sign_details`,
+                params: {
+                    openId: openId,
+                    signId: signId
+                }
+            }).then(d => {
+                let data = d.data.data;
+                let course_signInfo = document.getElementById("course_signInfo");
+                let html;
+
+                data.forEach(element => {
+                    if (element.sign) {
+                        html = `
+                    <td colspan="2">${element.userName}</td>
+                    <td colspan="2">${element.userId}</td>
+                    <td>是</td>
+                    <td><input hidden type="button" value="补签"></td>`
+                    } else {
+                        html = `
+                    <td colspan="2">${element.userName}</td>
+                    <td colspan="2">${element.userId}</td>
+                    <td id="c${element.userId}">否</td>
+                    <td><input id="b${element.userId}" type="button" onclick="fixSign(${element.userId})" value="补签"></td>`
+                    }
+                    let mytr = document.createElement("tr");
+                    mytr.innerHTML = html;
+                    course_signInfo.append(mytr);
+                });
+
+            });
+        }
+
+        loadCourseInfo();
+
+    </script>
+</body>
+
+</html>

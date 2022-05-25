@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dahuang.mapper.UserMapper">
+
+    <select id="getByUsername" parameterType="String" resultType="User">
+        select *
+        from user
+        where username=#{username};
+    </select>
+
+    <select id="getByUserId" parameterType="String" resultType="User">
+        select userId,username,avatarUrl
+        from user
+        where userId=#{userId};
+    </select>
+
+    <select id="getFriendsByUserId" parameterType="String" resultType="User">
+        select userId,username,avatarUrl
+        from user
+        where user.userId in (
+            select fuserId
+            from chat_friends
+            where userId=#{userId}
+            UNION ALL
+            select userId
+            from chat_friends
+            where fuserId=#{userId}
+        );
+    </select>
+
+    <select id="getGroupIdsByUserId" parameterType="String" resultType="String">
+            select groupId
+            from chat_group
+            where group_userId=#{userId}
+    </select>
+
+    <insert id="addFriendById" parameterType="String">
+        insert
+        into chat_friends (id,userId,fuserId,addtime)
+        values(null,#{userId},#{fuserId},NOW())
+    </insert>
+
+    <update id="updateAvatarById" parameterType="String">
+        update user
+        set avatarUrl=#{avatarUrl}
+        where userId=#{userId}
+    </update>
+
+    <delete id="deleteFriendById" parameterType="String" >
+        delete from chat_friends
+        where id in (
+            select a.id
+            from
+                (select id
+                 from chat_friends
+                 where userId=#{userId} and fuserId=#{fuserId}
+                 UNION ALL
+                 select id
+                 from chat_friends
+                 where userId=#{fuserId} and fuserId=#{userId}
+                )a)
+    </delete>
+
+    <insert id="registerUser" parameterType="String">
+        insert
+        into user (username,password)
+        values(#{username},#{password});
+    </insert>
+</mapper>
